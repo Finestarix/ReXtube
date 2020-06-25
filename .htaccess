@@ -1,0 +1,10 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine ON
+
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+
+    RewriteRule ^(.*)$ router.php [L]
+</IfModule>
+
+Options -Indexes
