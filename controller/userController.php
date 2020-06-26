@@ -13,7 +13,15 @@ function getUserByEmail($userEmail)
     $preparedStatement->execute();
 
     $result = $preparedStatement->get_result();
-    var_dump($result);
+
+    return $result->fetch_object();
+}
+
+function validateUserData($oldUser, $newUser)
+{
+    return ($oldUser->name == $newUser->userName &&
+        $oldUser->email == $newUser->userEmail &&
+        $oldUser->image == $newUser->userImage);
 }
 
 function insertUser($user)
@@ -31,8 +39,18 @@ function insertUser($user)
     $prepareStatement->execute();
 }
 
-function updateUser($user)
+function updateUser($userID, $user)
 {
+    $connection = getConnection();
 
+    $query = "UPDATE `users` SET `name`=?, `email`=?, `image`=? WHERE `id`=?";
+
+    $prepareStatement = $connection->prepare($query);
+    $prepareStatement->bind_param("ssss",
+        $user->userName,
+        $user->userEmail,
+        $user->userImage,
+        $userID);
+    $prepareStatement->execute();
 }
 

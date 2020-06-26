@@ -5,14 +5,14 @@ class User
     public $userID;
     public $userName;
     public $userEmail;
-    public $userProfile;
+    public $userImage;
 
-    public function __construct($userID, $userName, $userEmail, $userProfile)
+    public function __construct($userID, $userName, $userEmail, $userImage)
     {
         $this->userID = $userID;
         $this->userName = $userName;
         $this->userEmail = $userEmail;
-        $this->userProfile = $userProfile;
+        $this->userImage = $userImage;
     }
 
 }

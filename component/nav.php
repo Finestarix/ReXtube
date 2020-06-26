@@ -44,7 +44,7 @@ require('controller/signInController.php');
            class="fa fa-video mr-3"
            aria-hidden="true"></i>
 
-        <?php if (!isset($_SESSION['ACCESS_TOKEN'])) { ?>
+        <?php if (!isset($_SESSION['ID'])) { ?>
             <a style="border: 1px solid #007bff; color: #007bff; text-decoration: none"
                class="d-inline-flex align-items-center p-2"
                href="<?= $googleClient->createAuthUrl() ?>">
@@ -60,13 +60,13 @@ require('controller/signInController.php');
         <?php } else { ?>
             <img style="width: 35px; border-radius: 100%; cursor: pointer"
                  id="profile"
-                 src="<?= $_SESSION['PROFILE'] ?>"
+                 src="<?= $_SESSION['IMAGE'] ?>"
                  alt="Icon">
         <?php } ?>
     </div>
 
-    <?php if (isset($_SESSION['ACCESS_TOKEN'])) { ?>
-        <div style="position:fixed; display: none !important; right: 100px; top: 0;"
+    <?php if (isset($_SESSION['ID'])) { ?>
+        <div style="position:fixed; display: none !important; right: 55px; top: 0;"
              id="profile-dropdown"
              class="bg-light border p-3 flex-column">
 
@@ -74,7 +74,7 @@ require('controller/signInController.php');
                             border-bottom p-2">
                 <div>
                     <img style="width: 45px; border-radius: 100%"
-                         src="<?= $_SESSION['PROFILE'] ?>"
+                         src="<?= $_SESSION['IMAGE'] ?>"
                          alt="Icon">
                 </div>
 
@@ -194,7 +194,7 @@ require('controller/signInController.php');
 
         <div class="mt-3 mb-4 border-top"></div>
 
-        <?php if (!isset($_SESSION['ACCESS_TOKEN'])) { ?>
+        <?php if (!isset($_SESSION['ID'])) { ?>
 
             <p>Sign in to like videos, <br>comment, and subscribe.</p>
 
@@ -234,35 +234,34 @@ require('controller/signInController.php');
     </div>
 
     <script>
-        if (<?= isset($_SESSION['ACCESS_TOKEN']) ?>) {
+        <?php if(isset($_SESSION['ID'])) { ?>
 
-            let isProfileOpen = false;
-            const profile = document.getElementById('profile');
-            const dropdownProfile = document.getElementById('profile-dropdown');
-            profile.addEventListener('click', () => {
-                dropdownProfile.style.display = (isProfileOpen) ? 'none' : 'flex';
-                isProfileOpen = !isProfileOpen;
-            });
+        let isProfileOpen = false;
+        const profile = document.getElementById('profile');
+        const dropdownProfile = document.getElementById('profile-dropdown');
+        profile.addEventListener('click', () => {
+            dropdownProfile.style.display = (isProfileOpen) ? 'none' : 'flex';
+            isProfileOpen = !isProfileOpen;
+        });
 
-            let isMenuOpen = false;
-            const menu = document.getElementById('menu');
-            const dropdownMenu = document.getElementById('menu-dropdown');
-            menu.addEventListener('click', () => {
-                dropdownMenu.style.display = 'flex';
-                isMenuOpen = !isMenuOpen;
-            });
-            dropdownMenu.addEventListener('click', () => {
-                dropdownMenu.style.display = 'none';
-                isMenuOpen = !isMenuOpen;
-            });
+        const logout = document.getElementById('logout');
+        logout.addEventListener('click', () => {
+            logout.submit();
+        });
 
-            const logout = document.getElementById('logout');
-            logout.addEventListener('click', () => {
-                logout.submit();
-            });
+        <?php } ?>
 
-        }
-
+        let isMenuOpen = false;
+        const menu = document.getElementById('menu');
+        const dropdownMenu = document.getElementById('menu-dropdown');
+        menu.addEventListener('click', () => {
+            dropdownMenu.style.display = 'flex';
+            isMenuOpen = !isMenuOpen;
+        });
+        dropdownMenu.addEventListener('click', () => {
+            dropdownMenu.style.display = 'none';
+            isMenuOpen = !isMenuOpen;
+        });
 
     </script>
 
