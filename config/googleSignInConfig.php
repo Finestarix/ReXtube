@@ -19,6 +19,5 @@ $googleClient->setRedirectUri($redirectURI);
 $googleClient->addScope('email');
 $googleClient->addScope('profile');
 
-session_start();
 
 

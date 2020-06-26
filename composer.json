@@ -13,7 +13,8 @@
         "vlucas/phpdotenv": "^5.0@dev",
         "google/apiclient": "^2.0",
         "components/jquery": "dev-master",
-        "twbs/bootstrap": "4.0.0"
+        "twbs/bootstrap": "4.0.0",
+        "components/font-awesome": "dev-master"
     },
     "autoload": {
         "psr-0": {

@@ -18,14 +18,3 @@ if (!function_exists('getURI')) {
         );
     }
 }
-
-if (!function_exists('getAsset')) {
-    function getAsset($assetPath) {
-
-        $serverProtocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off')  ? 'https' : 'http';
-        $serverName = $_SERVER['SERVER_NAME'];
-        $serverPort = $_SERVER['SERVER_PORT'];
-
-        return sprintf('%s://%s:%s/%s', $serverProtocol, $serverName, $serverPort, $assetPath);
-    }
-}

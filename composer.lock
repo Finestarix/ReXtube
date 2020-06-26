@@ -4,8 +4,43 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "538676f3115eb9c81a186dd4fa501c99",
+    "content-hash": "fc3c71516fa5812b6e948f888933233d",
     "packages": [
+        {
+            "name": "components/font-awesome",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/components/font-awesome.git",
+                "reference": "7689f740772e9ce3db04e41455a48474e6afc1f1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/components/font-awesome/zipball/7689f740772e9ce3db04e41455a48474e6afc1f1",
+                "reference": "7689f740772e9ce3db04e41455a48474e6afc1f1",
+                "shasum": ""
+            },
+            "type": "component",
+            "extra": {
+                "component": {
+                    "styles": [
+                        "css/all.css"
+                    ],
+                    "files": [
+                        "css/all.min.css",
+                        "webfonts/*"
+                    ]
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "CC-BY-4.0",
+                "MIT",
+                "OFL-1.1"
+            ],
+            "description": "Font Awesome, the iconic SVG, font, and CSS framework.",
+            "time": "2020-06-23T05:51:22+00:00"
+        },
         {
             "name": "components/jquery",
             "version": "dev-master",
@@ -1463,7 +1498,8 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "vlucas/phpdotenv": 20,
-        "components/jquery": 20
+        "components/jquery": 20,
+        "components/font-awesome": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

@@ -10,4 +10,12 @@ class RouterController {
         include 'initialize.php';
     }
 
+    public function channel() {
+        include '';
+    }
+
+    public function logout() {
+        include 'controller/signOutController.php';
+    }
+
 }
