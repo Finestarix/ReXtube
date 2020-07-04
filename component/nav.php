@@ -149,11 +149,10 @@ if ($user == null) {
 
         </div>
 
-        <form style="cursor:pointer;"
+        <a style="cursor:pointer; text-decoration: none;"
               class="d-inline-flex align-items-center pb-3"
               id="home"
-              action="/"
-              method="post">
+              href="/">
 
             <div>
                 <i style="font-size: 1.6em;"
@@ -164,13 +163,12 @@ if ($user == null) {
                 Home
             </div>
 
-        </form>
+        </a>
 
-        <form style="cursor:pointer;"
+        <a style="cursor:pointer; text-decoration: none;"
               class="d-inline-flex align-items-center pb-3"
               id="trending"
-              action="trending"
-              method="post">
+              href="trending">
 
             <div>
                 <i style="font-size: 1.6em;"
@@ -181,13 +179,12 @@ if ($user == null) {
                 Trending
             </div>
 
-        </form>
+        </a>
 
-        <form style="cursor:pointer;"
+        <a style="cursor:pointer; text-decoration: none;"
               class="d-inline-flex align-items-center pb-3"
               id="subscription"
-              action="subscription"
-              method="post">
+              href="subscription">
 
             <div>
                 <i style="font-size: 1.6em;"
@@ -198,7 +195,7 @@ if ($user == null) {
                 Subscription
             </div>
 
-        </form>
+        </a>
 
         <div class="mt-3 mb-4 border-top"></div>
 

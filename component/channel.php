@@ -43,7 +43,7 @@ $userVideos = getVideoByUserID($user->userID);
                 </div>
 
                 <div>
-                    <div class="h4"><?= $userVideo['title'] ?></div>
+                    <div class="h5"><?= $userVideo['title'] ?></div>
                     <div>0 view - <?= $date ?></div>
                     <div><?= $description ?></div>
                 </div>

@@ -1,6 +1,6 @@
 <?php
 
-class RouterController {
+class RoutingController {
 
     public function index() {
         include 'index.php';
@@ -16,6 +16,10 @@ class RouterController {
 
     public function upload() {
         include 'upload.php';
+    }
+
+    public function trending() {
+        include 'trending.php';
     }
 
     public function logout() {

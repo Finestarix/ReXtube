@@ -3,6 +3,6 @@
 <?php include ('component/header.php') ?>
 <body class="bg-light">
 <?php include ('component/nav.php') ?>
-<?php include ('component/index.php') ?>
+<?php include ('component/trending.php') ?>
 </body>
 </html>

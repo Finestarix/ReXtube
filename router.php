@@ -1,9 +1,9 @@
 <?php
 
-include('controller/routerController.php');
+include('controller/routingController.php');
 include_once('util/uriHelper.php');
 
-$controllerURI = new RouterController();
+$controllerURI = new RoutingController();
 $URI = getURI()['path'];
 
 if (method_exists($controllerURI, $URI)) {

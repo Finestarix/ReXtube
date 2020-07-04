@@ -17,12 +17,30 @@ if (!function_exists('getVideoByUserID')) {
     }
 }
 
-if (!function_exists('getAllVideo')) {
-    function getAllVideo()
+if (!function_exists('getHomeVideo')) {
+    function getHomeVideo()
     {
         $connection = getConnection();
 
         $query = "SELECT * FROM `videos` ORDER BY `date` DESC";
+
+        $preparedStatement = $connection->prepare($query);
+        $preparedStatement->execute();
+
+        return $preparedStatement->get_result();
+    }
+}
+
+if (!function_exists('getTrendingVideo')) {
+    function getTrendingVideo()
+    {
+        $connection = getConnection();
+
+        $query = "SELECT videos.id, videos.user_id, videos.title, videos.description, videos.date, viewData.totalView
+                  FROM videos, ( SELECT videos.id, COUNT(*) AS totalView FROM videos JOIN view_detail 
+                    WHERE view_detail.video_id = videos.id GROUP BY videos.id ) AS viewData
+                  WHERE videos.id = viewData.id
+                  ORDER BY viewData.totalView DESC";
 
         $preparedStatement = $connection->prepare($query);
         $preparedStatement->execute();

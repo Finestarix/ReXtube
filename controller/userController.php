@@ -19,6 +19,23 @@ if (!function_exists('getUserByEmail')) {
     }
 }
 
+if (!function_exists('getUserByID')) {
+    function getUserByID($userID)
+    {
+        $connection = getConnection();
+
+        $query = "SELECT * FROM `users` WHERE `id` = ?";
+
+        $preparedStatement = $connection->prepare($query);
+        $preparedStatement->bind_param("s", $userID);
+        $preparedStatement->execute();
+
+        $result = $preparedStatement->get_result();
+
+        return $result->fetch_object();
+    }
+}
+
 if (!function_exists('validateUserDate')) {
     function validateUserData($oldUser, $newUser)
     {
