@@ -6,15 +6,7 @@ require_once('util/reportHelper.php');
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>ReXtube Initialization Script</title>
-    <link rel="shortcut icon" href="<?= getAsset('images/favicon.ico') ?>" type="image/x-icon">
-    <link rel="stylesheet" href="<?= getAsset('vendor/twbs/bootstrap/dist/css/bootstrap.css') ?>">
-    <script src="<?= getAsset('vendor/components/jquery/jquery.js'); ?>"></script>
-    <script src="<?= getAsset('vendor/twbs/bootstrap/dist/js/bootstrap.js'); ?>"></script>
+    <?php include('component/header.php') ?>
 </head>
 <body class="bg-dark">
 <div class="container-fluid mt-3 mb-3">
@@ -74,7 +66,7 @@ require_once('util/reportHelper.php');
 
                 $isForce = true;
             } else {
-                $URI = getAsset('');
+                $URI = '/';
 
                 $successMessage = "Data has been initialized. Please add force parameter if you want to re-initialize the application.";
                 $otherMessage = sprintf(
@@ -111,10 +103,15 @@ require_once('util/reportHelper.php');
                 "@" . $databaseConfig['HOST'] . " with username " . $databaseConfig['USERNAME'];
             echo createReport($reportSQLConnectName, $errorMessage);
 
-            $tableName = "2 tables (app_config, users)";
+            $tableName = "7 tables (app_config, users, subscriber, videos, like_detail, dislike_detail, view_detail)";
 
             $tableDropQueries = [
                 "DROP TABLE IF EXISTS `app_config`",
+                "DROP TABLE IF EXISTS `like_detail`",
+                "DROP TABLE IF EXISTS `dislike_detail`",
+                "DROP TABLE IF EXISTS `view_detail`",
+                "DROP TABLE IF EXISTS `subscribers`",
+                "DROP TABLE IF EXISTS `videos`",
                 "DROP TABLE IF EXISTS `users`"
             ];
 
@@ -131,12 +128,54 @@ require_once('util/reportHelper.php');
                   `email` varchar(255) NOT NULL,
                   `image` varchar(255) NOT NULL,
                   PRIMARY KEY (`id`)
-                )"
+                )",
+                "CREATE TABLE `subscribers` (
+                  `user_id` char(40) NOT NULL,
+                  `friend_id` char(40) NOT NULL,
+                  FOREIGN KEY (`user_id`) REFERENCES `users`(`id`),
+                  FOREIGN KEY (`friend_id`) REFERENCES `users`(`id`),
+                  PRIMARY KEY (`user_id`, `friend_id`)
+                )",
+                "CREATE TABLE `videos` (
+                  `id` char(40) NOT NULL,
+                  `user_id` char(40) NOT NULL,
+                  `title` varchar(255) NOT NULL,
+                  `description` varchar(2000) NOT NULL,
+                  `date` DATETIME NOT NULL,
+                  FOREIGN KEY (`user_id`) REFERENCES `users`(`id`),
+                  PRIMARY KEY (`id`)
+                )",
+                "CREATE TABLE `like_detail` (
+                  `video_id` char(40) NOT NULL,
+                  `user_id` char(40) NOT NULL,
+                  FOREIGN KEY (`video_id`) REFERENCES `videos`(`id`),
+                  FOREIGN KEY (`user_id`) REFERENCES `users`(`id`),
+                  PRIMARY KEY (`video_id`, `user_id`)
+                )",
+                "CREATE TABLE `dislike_detail` (
+                  `video_id` char(40) NOT NULL,
+                  `user_id` char(40) NOT NULL,
+                  FOREIGN KEY (`video_id`) REFERENCES `videos`(`id`),
+                  FOREIGN KEY (`user_id`) REFERENCES `users`(`id`),
+                  PRIMARY KEY (`video_id`, `user_id`)
+                )",
+                "CREATE TABLE `view_detail` (
+                  `video_id` char(40) NOT NULL,
+                  `user_id` char(40) NOT NULL,
+                  FOREIGN KEY (`video_id`) REFERENCES `videos`(`id`),
+                  FOREIGN KEY (`user_id`) REFERENCES `users`(`id`),
+                  PRIMARY KEY (`video_id`, `user_id`)
+                )",
             ];
 
             $tableInsertQueries = [
                 "INSERT INTO `app_config` (`key`, `value`) VALUES (?, ?)",
-                "INSERT INTO `users` (`id`, `name`, `email`, `image`) VALUES (?, ?, ?, ?)"
+                "INSERT INTO `users` (`id`, `name`, `email`, `image`) VALUES (?, ?, ?, ?)",
+                "INSERT INTO `subscribers` (`user_id`, `friend_id`) VALUES (?, ?)",
+                "INSERT INTO `videos` (`id`, `user_id`, `title`, `description`, `date`) VALUES (?, ?, ?, ?, ?)",
+                "INSERT INTO `like_detail` (`video_id`, `user_id`) VALUES (?, ?)",
+                "INSERT INTO `dislike_detail` (`video_id`, `user_id`) VALUES (?, ?)",
+                "INSERT INTO `view_detail` (`video_id`, `user_id`) VALUES (?, ?)",
             ];
 
             foreach ($tableDropQueries as $tableDropQuery)
@@ -171,7 +210,97 @@ require_once('util/reportHelper.php');
                     "242f6b8c-1b3b-4c13-9394-412778e58ec1",
                     "Ignatius Renaldy",
                     "irenaldyleonarto@gmail.com",
-                    "https://yt3.ggpht.com/-ykT9UUXcQZY/AAAAAAAAAAI/AAAAAAAAAAA/Ny28Fr4vl3o/s108-c-k-c0x00ffffff-no-rj-mo/photo.jpg"
+                    "https://lh3.googleusercontent.com/a-/AOh14Gh_W4Akm61Ga58uIdilytUall7FnkPDnYRy_D5fRg"
+                ],
+                [
+                    "ssss",
+                    "233173a0-bd48-11ea-b3de-0242ac130004",
+                    "Adrestia Persephone",
+                    "adrestiapersephone@gmail.com",
+                    "https://lh3.googleusercontent.com/a-/AOh14GjBvJsfCDNmLK2lNxbvRxjPGjQ69O6nfSKCzPpY"
+                ]
+            ];
+
+            $videoSeeder = [
+                [
+                    "sssss",
+                    "cefd24b0-5198-4a65-9d20-1faaaffec4d5",
+                    "242f6b8c-1b3b-4c13-9394-412778e58ec1",
+                    "BLACKPINK - How You Like That",
+                    "BLACKPINK - How You Like That",
+                    "2020-06-26 10:00:00"
+                ],
+                [
+                    "sssss",
+                    "a775f28e-5726-4503-8b54-c525e95e61b0",
+                    "242f6b8c-1b3b-4c13-9394-412778e58ec1",
+                    "BLACKPINK - Stay",
+                    "BLACKPINK - Stay",
+                    "2016-10-31 20:00:00"
+                ],
+                [
+                    "sssss",
+                    "8012c37d-84b4-42e9-bcb6-03089a12858d",
+                    "242f6b8c-1b3b-4c13-9394-412778e58ec1",
+                    "BTS - Stay Gold",
+                    "BTS - Stay Gold",
+                    "2020-06-26 13:00:00 AM"
+                ],
+                [
+                    "sssss",
+                    "d3512d6f-255e-484d-8672-aa80e3dad7b7",
+                    "242f6b8c-1b3b-4c13-9394-412778e58ec1",
+                    "Final Fantasy 7 Remake - Official Trailer",
+                    "Final Fantasy 7 Remake - Official Trailer",
+                    "2020-04-30 12:00:00"
+                ],
+                [
+                    "sssss",
+                    "e486ebef-9938-4a45-a316-a9ccfa7eab82",
+                    "242f6b8c-1b3b-4c13-9394-412778e58ec1",
+                    "TIKTOK SING OFF",
+                    "TIKTOK SING OFF",
+                    "2020-06-20 16:30:00"
+                ],
+                [
+                    "sssss",
+                    "570f6f8e-9e4f-41e4-94e9-85d765bbbcc8",
+                    "233173a0-bd48-11ea-b3de-0242ac130004",
+                    "Greenland - Official Trailer [HD]",
+                    "Greenland - Official Trailer [HD]",
+                    "2020-03-10 14:00:00"
+                ],
+                [
+                    "sssss",
+                    "52cd3513-5e13-473c-aa41-7e068d4ba358",
+                    "233173a0-bd48-11ea-b3de-0242ac130004",
+                    "Kimetsu No Yai",
+                    "Kimetsu No Yai",
+                    "2019-12-29 18:30:00"
+                ],
+                [
+                    "sssss",
+                    "f408badf-0429-4518-8409-9012973a932c",
+                    "233173a0-bd48-11ea-b3de-0242ac130004",
+                    "Kingdom - Official Trailer [HD]",
+                    "Kingdom - Official Trailer [HD]",
+                    "2019-12-29 18:30:00"
+                ],
+                [
+                    "sssss",
+                    "5e90df93-9eb6-4a48-8078-4850c302c46a",
+                    "233173a0-bd48-11ea-b3de-0242ac130004",
+                    "Minecraft Nether Update - Official Trailer",
+                    "Minecraft Nether Update - Official Trailer",
+                    "2019-12-29 18:30:00"
+                ],
+                [
+                    "sssss",
+                    "f5f9e067-a02f-4986-af67-0cbc6a18fddf",
+                    "233173a0-bd48-11ea-b3de-0242ac130004",
+                    "Weird Genius - Lathi (ft. Sara Fajira) Official Music Video",
+                    "Weird Genius - Lathi (ft. Sara Fajira) Official Music Video",
+                    "2019-12-29 18:30:00"
                 ]
             ];
 
@@ -183,6 +312,10 @@ require_once('util/reportHelper.php');
                 [
                     $tableInsertQueries[1],
                     $userSeeder
+                ],
+                [
+                    $tableInsertQueries[3],
+                    $videoSeeder
                 ],
             ];
 
@@ -220,7 +353,11 @@ require_once('util/reportHelper.php');
                 "Users data entered (" . count($userSeeder) . " data(s))",
             ]);
 
-            $URI = getAsset('');
+            echo createReport($reportSeederName, [
+                "Videos data entered (" . count($videoSeeder) . " data(s))",
+            ]);
+
+            $URI = '/';
 
             $successMessage = "Initialization Database Complete";
             $otherMessage = sprintf(

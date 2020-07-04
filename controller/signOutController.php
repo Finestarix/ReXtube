@@ -1,6 +1,6 @@
 <?php
 
-require('config/googleSignInConfig.php');
+require_once(dirname(__FILE__) . '/../config/googleSignInConfig.php');
 
 $googleClient->revokeToken();
 

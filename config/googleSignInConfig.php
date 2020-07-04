@@ -1,6 +1,6 @@
 <?php
 
-require ('vendor/autoload.php');
+require('vendor/autoload.php');
 
 $envArr = Dotenv\Dotenv::createImmutable(__DIR__ . '/../', '.env');
 $envArr->load();
@@ -18,6 +18,3 @@ $googleClient->setRedirectUri($redirectURI);
 
 $googleClient->addScope('email');
 $googleClient->addScope('profile');
-
-
-

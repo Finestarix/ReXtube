@@ -4,8 +4,50 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fc3c71516fa5812b6e948f888933233d",
+    "content-hash": "7d61543633128d1b21fcb9c8a40350ee",
     "packages": [
+        {
+            "name": "ckeditor/ckeditor",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ckeditor/ckeditor4-releases.git",
+                "reference": "8eccaf31ad9832a113757d379758996ed2150f60"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ckeditor/ckeditor4-releases/zipball/8eccaf31ad9832a113757d379758996ed2150f60",
+                "reference": "8eccaf31ad9832a113757d379758996ed2150f60",
+                "shasum": ""
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0+",
+                "LGPL-2.1+",
+                "MPL-1.1+"
+            ],
+            "authors": [
+                {
+                    "name": "CKSource",
+                    "homepage": "https://cksource.com"
+                }
+            ],
+            "description": "JavaScript WYSIWYG web text editor.",
+            "homepage": "https://ckeditor.com/ckeditor-4/",
+            "keywords": [
+                "CKEditor",
+                "ckeditor4",
+                "editor",
+                "fckeditor",
+                "html",
+                "javascript",
+                "richtext",
+                "text",
+                "wysiwyg"
+            ],
+            "time": "2020-06-17T12:33:25+00:00"
+        },
         {
             "name": "components/font-awesome",
             "version": "dev-master",
@@ -139,12 +181,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-api-php-client.git",
-                "reference": "8e03c1ebd632b3a02a2c42744bf405a2ba414f4f"
+                "reference": "c7f965f0f2a3d12089a0ee1fa5911c39324e1ec8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-api-php-client/zipball/8e03c1ebd632b3a02a2c42744bf405a2ba414f4f",
-                "reference": "8e03c1ebd632b3a02a2c42744bf405a2ba414f4f",
+                "url": "https://api.github.com/repos/googleapis/google-api-php-client/zipball/c7f965f0f2a3d12089a0ee1fa5911c39324e1ec8",
+                "reference": "c7f965f0f2a3d12089a0ee1fa5911c39324e1ec8",
                 "shasum": ""
             },
             "require": {
@@ -192,7 +234,7 @@
             "keywords": [
                 "google"
             ],
-            "time": "2020-06-08T17:26:18+00:00"
+            "time": "2020-06-18T17:54:38+00:00"
         },
         {
             "name": "google/apiclient-services",
@@ -351,12 +393,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "9d4290de1cfd701f38099ef7e183b64b4b7b0c5e"
+                "reference": "e8ed4dbf49b260ff129ff0e0400718c3269971bf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/9d4290de1cfd701f38099ef7e183b64b4b7b0c5e",
-                "reference": "9d4290de1cfd701f38099ef7e183b64b4b7b0c5e",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/e8ed4dbf49b260ff129ff0e0400718c3269971bf",
+                "reference": "e8ed4dbf49b260ff129ff0e0400718c3269971bf",
                 "shasum": ""
             },
             "require": {
@@ -410,7 +452,29 @@
                 "rest",
                 "web service"
             ],
-            "time": "2020-06-16T21:01:06+00:00"
+            "funding": [
+                {
+                    "url": "https://github.com/GrahamCampbell",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/Nyholm",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/alexeyshockov",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/gmponos",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/sagikazarmark",
+                    "type": "github"
+                }
+            ],
+            "time": "2020-07-02T06:52:04+00:00"
         },
         {
             "name": "guzzlehttp/promises",
@@ -1422,12 +1486,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/vlucas/phpdotenv.git",
-                "reference": "27ddc2cfeb389d7f1112630d12f1bc83aecdd827"
+                "reference": "c2da5440047bbaf8ed8dc29a0df300e88b5cb50b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vlucas/phpdotenv/zipball/27ddc2cfeb389d7f1112630d12f1bc83aecdd827",
-                "reference": "27ddc2cfeb389d7f1112630d12f1bc83aecdd827",
+                "url": "https://api.github.com/repos/vlucas/phpdotenv/zipball/c2da5440047bbaf8ed8dc29a0df300e88b5cb50b",
+                "reference": "c2da5440047bbaf8ed8dc29a0df300e88b5cb50b",
                 "shasum": ""
             },
             "require": {
@@ -1490,7 +1554,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-06-25T10:33:16+00:00"
+            "time": "2020-07-01T09:38:46+00:00"
         }
     ],
     "packages-dev": [],
@@ -1499,12 +1563,13 @@
     "stability-flags": {
         "vlucas/phpdotenv": 20,
         "components/jquery": 20,
-        "components/font-awesome": 20
+        "components/font-awesome": 20,
+        "ckeditor/ckeditor": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=5.3.0"
+        "php": ">=5.4"
     },
     "platform-dev": [],
     "plugin-api-version": "1.1.0"

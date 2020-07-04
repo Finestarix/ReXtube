@@ -1,56 +1,64 @@
 <?php
-include('model/User.php');
-include('databaseController.php');
+require_once(dirname(__FILE__) . '/../model/User.php');
+require_once(dirname(__FILE__) . '/databaseController.php');
 
-function getUserByEmail($userEmail)
-{
-    $connection = getConnection();
+if (!function_exists('getUserByEmail')) {
+    function getUserByEmail($userEmail)
+    {
+        $connection = getConnection();
 
-    $query = "SELECT * FROM `users` WHERE `email` = ?";
+        $query = "SELECT * FROM `users` WHERE `email` = ?";
 
-    $preparedStatement = $connection->prepare($query);
-    $preparedStatement->bind_param("s", $userEmail);
-    $preparedStatement->execute();
+        $preparedStatement = $connection->prepare($query);
+        $preparedStatement->bind_param("s", $userEmail);
+        $preparedStatement->execute();
 
-    $result = $preparedStatement->get_result();
+        $result = $preparedStatement->get_result();
 
-    return $result->fetch_object();
+        return $result->fetch_object();
+    }
 }
 
-function validateUserData($oldUser, $newUser)
-{
-    return ($oldUser->name == $newUser->userName &&
-        $oldUser->email == $newUser->userEmail &&
-        $oldUser->image == $newUser->userImage);
+if (!function_exists('validateUserDate')) {
+    function validateUserData($oldUser, $newUser)
+    {
+        return ($oldUser->name == $newUser->userName &&
+            $oldUser->email == $newUser->userEmail &&
+            $oldUser->image == $newUser->userImage);
+    }
 }
 
-function insertUser($user)
-{
-    $connection = getConnection();
+if (!function_exists('insertUser')) {
+    function insertUser($user)
+    {
+        $connection = getConnection();
 
-    $query = "INSERT INTO `users` (`id`, `name`, `email`, `image`) VALUES (?, ?, ?, ?)";
+        $query = "INSERT INTO `users` (`id`, `name`, `email`, `image`) VALUES (?, ?, ?, ?)";
 
-    $prepareStatement = $connection->prepare($query);
-    $prepareStatement->bind_param("ssss",
-        $user->userID,
-        $user->userName,
-        $user->userEmail,
-        $user->userProfile);
-    $prepareStatement->execute();
+        $prepareStatement = $connection->prepare($query);
+        $prepareStatement->bind_param("ssss",
+            $user->userID,
+            $user->userName,
+            $user->userEmail,
+            $user->userImage);
+        $prepareStatement->execute();
+    }
 }
 
-function updateUser($userID, $user)
-{
-    $connection = getConnection();
+if (!function_exists('updateUser')) {
+    function updateUser($userID, $user)
+    {
+        $connection = getConnection();
 
-    $query = "UPDATE `users` SET `name`=?, `email`=?, `image`=? WHERE `id`=?";
+        $query = "UPDATE `users` SET `name`=?, `email`=?, `image`=? WHERE `id`=?";
 
-    $prepareStatement = $connection->prepare($query);
-    $prepareStatement->bind_param("ssss",
-        $user->userName,
-        $user->userEmail,
-        $user->userImage,
-        $userID);
-    $prepareStatement->execute();
+        $prepareStatement = $connection->prepare($query);
+        $prepareStatement->bind_param("ssss",
+            $user->userName,
+            $user->userEmail,
+            $user->userImage,
+            $userID);
+        $prepareStatement->execute();
+    }
 }
 

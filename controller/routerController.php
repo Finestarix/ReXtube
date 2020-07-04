@@ -11,7 +11,11 @@ class RouterController {
     }
 
     public function channel() {
-        include '';
+        include 'channel.php';
+    }
+
+    public function upload() {
+        include 'upload.php';
     }
 
     public function logout() {

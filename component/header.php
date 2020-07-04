@@ -16,4 +16,14 @@ require_once('util/uriHelper.php');
     <link rel="stylesheet" href="/vendor/components/font-awesome/css/v4-shims.css">
     <script src="/vendor/components/jquery/jquery.js"></script>
     <script src="/vendor/twbs/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="/vendor/ckeditor/ckeditor/ckeditor.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+
+            color: #484848;
+        }
+    </style>
 </head>

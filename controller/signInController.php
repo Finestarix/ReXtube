@@ -1,8 +1,9 @@
 <?php
 
-require('util/UUIDHelper.php');
-require('config/googleSignInConfig.php');
-require('userController.php');
+require_once(dirname(__FILE__) . '/../util/UUIDHelper.php');
+require_once(dirname(__FILE__) . '/../config/googleSignInConfig.php');
+require_once(dirname(__FILE__) . '/userController.php');
+require_once(dirname(__FILE__) . '/sessionController.php');
 
 if (!isset($_GET["code"]))
     return;
@@ -22,16 +23,15 @@ if (!isset($googleToken['error'])) {
     $searchUser = getUserByEmail($googleData['email']);
     $user = new User(generateUUID(), $name, $email, $image);
 
-    if ($searchUser) {
-        if(!validateUserData($searchUser, $user))
+    if ($searchUser != null) {
+        if (!validateUserData($searchUser, $user))
             updateUser($searchUser->id, $user);
+
+        $user->userID = $searchUser->id;
     } else
         insertUser($user);
 
-    $_SESSION['ID'] = $searchUser->id;
-    $_SESSION['NAME'] = $user->userName;
-    $_SESSION['EMAIL'] = $user->userEmail;
-    $_SESSION['IMAGE'] = $user->userImage;
+    setSession($user);
 }
 
 header('Location: /');

@@ -1,5 +1,14 @@
 <?php
-require('controller/signInController.php');
+require_once('controller/signInController.php');
+require_once('controller/sessionController.php');
+
+$user = getSession();
+
+if ($user == null) {
+    $path = getURI()['path'];
+    if ($path == 'channel' || $path == 'upload')
+        header('Location: ' . $googleClient->createAuthUrl());
+}
 ?>
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light
@@ -23,29 +32,31 @@ require('controller/signInController.php');
 
     <div class="flex-row align-items-center justify-content-center">
 
-        <form class="form-inline">
+        <a class="form-inline position-relative">
 
-            <input style="width: 30em"
-                   class="form-control mr-3"
-                   placeholder="Search"
-                   type="search">
+            <label>
+                <input style="width: 30em"
+                       class="form-control mr-3"
+                       placeholder="Search"
+                       type="search">
+            </label>
 
-            <i style="cursor: pointer"
-               class="fa fa-search"
+            <i style="cursor: pointer; right: 30px"
+               class="fa fa-search position-absolute"
                aria-hidden="true"></i>
 
-        </form>
+        </a>
 
     </div>
 
     <div class="d-inline-flex align-items-center">
 
-        <i style="font-size: 1.2em"
+        <a style="font-size: 1.2em; text-decoration: none; color: black;"
            class="fa fa-video mr-3"
-           aria-hidden="true"></i>
+           href="upload"></a>
 
-        <?php if (!isset($_SESSION['ID'])) { ?>
-            <a style="border: 1px solid #007bff; color: #007bff; text-decoration: none"
+        <?php if ($user == null) { ?>
+            <a style="border: 1px solid #007bff; color: #007bff; text-decoration: none;"
                class="d-inline-flex align-items-center p-2"
                href="<?= $googleClient->createAuthUrl() ?>">
 
@@ -60,12 +71,12 @@ require('controller/signInController.php');
         <?php } else { ?>
             <img style="width: 35px; border-radius: 100%; cursor: pointer"
                  id="profile"
-                 src="<?= $_SESSION['IMAGE'] ?>"
+                 src="<?= $user->userImage ?>"
                  alt="Icon">
         <?php } ?>
     </div>
 
-    <?php if (isset($_SESSION['ID'])) { ?>
+    <?php if ($user != null) { ?>
         <div style="position:fixed; display: none !important; right: 55px; top: 0;"
              id="profile-dropdown"
              class="bg-light border p-3 flex-column">
@@ -74,40 +85,37 @@ require('controller/signInController.php');
                             border-bottom p-2">
                 <div>
                     <img style="width: 45px; border-radius: 100%"
-                         src="<?= $_SESSION['IMAGE'] ?>"
+                         src="<?= $user->userImage ?>"
                          alt="Icon">
                 </div>
 
                 <div class="flex-column ml-3">
-                    <p class="m-0"><b><?= $_SESSION['NAME'] ?></b></p>
-                    <p class="m-0"><?= $_SESSION['EMAIL'] ?></p>
+                    <p class="m-0"><b><?= $user->userName ?></b></p>
+                    <p class="m-0"><?= $user->userEmail ?></p>
                 </div>
 
             </div>
 
-            <form style="cursor:pointer;"
-                  class="d-inline-flex align-items-center p-2 pl-3 pt-3"
-                  id="channel"
-                  action="channel"
-                  method="post">
+            <a style="cursor:pointer; text-decoration: none; color: black;"
+               class="d-inline-flex align-items-center p-2 pl-3 pt-3"
+               id="channel"
+               href="channel">
 
                 <div>
                     <i style="font-size: 1.6em;"
                        class="fa fa-user"></i>
                 </div>
 
-                <div class="ml-4 pl-2"
-                     id="channel">
+                <div class="ml-4 pl-2">
                     Your Channel
                 </div>
 
-            </form>
+            </a>
 
-            <form style="cursor:pointer;"
-                  class="d-inline-flex align-items-center p-2 pl-3"
-                  id="logout"
-                  action="logout"
-                  method="post">
+            <a style="cursor:pointer; text-decoration: none; color: black;"
+               class="d-inline-flex align-items-center p-2 pl-3"
+               id="logout"
+               href="logout">
 
                 <div>
                     <i style="font-size: 1.6em;"
@@ -118,7 +126,7 @@ require('controller/signInController.php');
                     Sign Out
                 </div>
 
-            </form>
+            </a>
 
         </div>
     <?php } ?>
@@ -160,7 +168,7 @@ require('controller/signInController.php');
 
         <form style="cursor:pointer;"
               class="d-inline-flex align-items-center pb-3"
-              id="home"
+              id="trending"
               action="trending"
               method="post">
 
@@ -177,7 +185,7 @@ require('controller/signInController.php');
 
         <form style="cursor:pointer;"
               class="d-inline-flex align-items-center pb-3"
-              id="home"
+              id="subscription"
               action="subscription"
               method="post">
 
@@ -194,7 +202,7 @@ require('controller/signInController.php');
 
         <div class="mt-3 mb-4 border-top"></div>
 
-        <?php if (!isset($_SESSION['ID'])) { ?>
+        <?php if ($user == null) { ?>
 
             <p>Sign in to like videos, <br>comment, and subscribe.</p>
 
@@ -214,8 +222,8 @@ require('controller/signInController.php');
 
             <form style="cursor:pointer;"
                   class="d-inline-flex align-items-center pb-3"
-                  id="home"
-                  action="subscription"
+                  id="history"
+                  action="history"
                   method="post">
 
                 <div>
@@ -234,7 +242,7 @@ require('controller/signInController.php');
     </div>
 
     <script>
-        <?php if(isset($_SESSION['ID'])) { ?>
+        <?php if($user != null) { ?>
 
         let isProfileOpen = false;
         const profile = document.getElementById('profile');
@@ -242,11 +250,6 @@ require('controller/signInController.php');
         profile.addEventListener('click', () => {
             dropdownProfile.style.display = (isProfileOpen) ? 'none' : 'flex';
             isProfileOpen = !isProfileOpen;
-        });
-
-        const logout = document.getElementById('logout');
-        logout.addEventListener('click', () => {
-            logout.submit();
         });
 
         <?php } ?>
