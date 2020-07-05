@@ -1,6 +1,7 @@
 <?php
 require_once('controller/subscriberController.php');
 require_once('controller/videoController.php');
+require_once('controller/viewController.php');
 
 $totalSubscriber = getTotalUserSubscriber($user->userID);
 $userVideos = getVideoByUserID($user->userID);
@@ -26,6 +27,8 @@ $userVideos = getVideoByUserID($user->userID);
 
         <?php
         foreach ($userVideos as $userVideo) {
+            $view = getTotalViewByVideoID($userVideo['id']);
+
             $previewImage = '/video/' . $userVideo['user_id'] . '/' . $userVideo['id'] . '/image.jpg';
             $date = date("F j, Y", strtotime($userVideo['date']));
             $description = strlen($userVideo['description']) > 80 ?
@@ -44,7 +47,7 @@ $userVideos = getVideoByUserID($user->userID);
 
                 <div>
                     <div class="h5"><?= $userVideo['title'] ?></div>
-                    <div>0 view - <?= $date ?></div>
+                    <div><?= $view->totalView ?> views - <?= $date ?></div>
                     <div><?= $description ?></div>
                 </div>
 

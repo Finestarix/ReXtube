@@ -1,5 +1,6 @@
 <?php
 require_once('controller/videoController.php');
+require_once('controller/viewController.php');
 
 $userVideos = getHomeVideo();
 ?>
@@ -9,8 +10,10 @@ $userVideos = getHomeVideo();
 
     <?php
     foreach ($userVideos as $userVideo) {
-        $previewImage = '/video/' . $userVideo['user_id'] . '/' . $userVideo['id'] . '/image.jpg';
         $userUpload = getUserByID($userVideo['user_id']);
+        $view = getTotalViewByVideoID($userVideo['id']);
+
+        $previewImage = '/video/' . $userVideo['user_id'] . '/' . $userVideo['id'] . '/image.jpg';
         $title = strlen($userVideo['title']) > 17 ?
             (substr($userVideo['title'], 0, 17) . '...') : $userVideo['title'];
         $date = date("M j, Y", strtotime($userVideo['date']));
@@ -35,7 +38,7 @@ $userVideos = getHomeVideo();
                 <div>
                     <div class="h5 m-0"><?= $title ?></div>
                     <div><?= $userUpload->name ?></div>
-                    <div>0 view - <?= $date ?></div>
+                    <div><?= $view->totalView ?> views - <?= $date ?></div>
                 </div>
             </div>
 

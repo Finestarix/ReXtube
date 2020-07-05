@@ -6,8 +6,12 @@ require_once(dirname(__FILE__) . '/sessionController.php');
 require_once(dirname(__FILE__) . '/../model/Video.php');
 require_once(dirname(__FILE__) . '/videoController.php');
 
+if(isset($_POST['g-recaptcha-response']))
+    $captcha = $_POST['g-recaptcha-response'];
 
-if (empty($_POST['title']))
+if (!$captcha)
+    $_SESSION['ERROR'] = 'You are robot !';
+else if (empty($_POST['title']))
     $_SESSION['ERROR'] = 'Title can\'t be empty !';
 else if (empty($_POST['description']))
     $_SESSION['ERROR'] = 'Description can\'t be empty !';

@@ -1,3 +1,5 @@
+<script src="https://www.google.com/recaptcha/api.js"></script>
+
 <style>
     #upload-video, #upload-thumbnail {
         cursor: pointer;
@@ -79,6 +81,10 @@
             unset($_SESSION['ERROR']);
         }
         ?>
+
+        <div class="g-recaptcha mb-3"
+             data-sitekey="6LfVuK0ZAAAAAMR_hfGzDtacqZYk99XpDv2M0WM_">
+        </div>
 
         <button type="submit"
                 class="btn btn-secondary w-100">
