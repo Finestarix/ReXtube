@@ -17,6 +17,23 @@ if (!function_exists('getVideoByUserID')) {
     }
 }
 
+if (!function_exists('getVideoByID')) {
+    function getVideoByID($videoID)
+    {
+        $connection = getConnection();
+
+        $query = "SELECT * FROM `videos` WHERE `id` LIKE ? ORDER BY `date` DESC";
+
+        $preparedStatement = $connection->prepare($query);
+        $preparedStatement->bind_param("s", $videoID);
+        $preparedStatement->execute();
+
+        $result = $preparedStatement->get_result();
+
+        return $result->fetch_object();
+    }
+}
+
 if (!function_exists('getHomeVideo')) {
     function getHomeVideo()
     {
@@ -43,6 +60,21 @@ if (!function_exists('getTrendingVideo')) {
                   ORDER BY viewData.totalView DESC";
 
         $preparedStatement = $connection->prepare($query);
+        $preparedStatement->execute();
+
+        return $preparedStatement->get_result();
+    }
+}
+
+if (!function_exists('getRandomVideo')) {
+    function getRandomVideo($videoID)
+    {
+        $connection = getConnection();
+
+        $query = "SELECT * FROM `videos` WHERE `id` NOT LIKE ? ORDER BY RAND() DESC LIMIT 20";
+
+        $preparedStatement = $connection->prepare($query);
+        $preparedStatement->bind_param("s", $videoID);
         $preparedStatement->execute();
 
         return $preparedStatement->get_result();

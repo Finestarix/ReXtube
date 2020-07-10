@@ -41,7 +41,8 @@ require_once('util/reportHelper.php');
             die(createReport($reportPreflightName, $errorMessage));
         }
 
-        $createDatabaseQuery = "CREATE DATABASE IF NOT EXISTS " . $databaseConfig['DATABASE_NAME'];
+        $createDatabaseQuery = "CREATE DATABASE IF NOT EXISTS " . $databaseConfig['DATABASE_NAME'] .
+            " DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;";
         $preflightConnection->query($createDatabaseQuery);
 
         $preflightConnection->select_db($databaseConfig['DATABASE_NAME']);
@@ -103,13 +104,15 @@ require_once('util/reportHelper.php');
                 "@" . $databaseConfig['HOST'] . " with username " . $databaseConfig['USERNAME'];
             echo createReport($reportSQLConnectName, $errorMessage);
 
-            $tableName = "7 tables (app_config, users, subscriber, videos, like_detail, dislike_detail, view_detail)";
+            $tableName = "9 tables (app_config, users, subscriber, videos, like_detail, dislike_detail, view_detail, replies, comments)";
 
             $tableDropQueries = [
                 "DROP TABLE IF EXISTS `app_config`",
                 "DROP TABLE IF EXISTS `like_detail`",
                 "DROP TABLE IF EXISTS `dislike_detail`",
                 "DROP TABLE IF EXISTS `view_detail`",
+                "DROP TABLE IF EXISTS `replies`",
+                "DROP TABLE IF EXISTS `comments`",
                 "DROP TABLE IF EXISTS `subscribers`",
                 "DROP TABLE IF EXISTS `videos`",
                 "DROP TABLE IF EXISTS `users`"
@@ -121,51 +124,71 @@ require_once('util/reportHelper.php');
                     `value` BOOLEAN,
                     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                     PRIMARY KEY (`key`)
-                )",
+                ) CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;",
                 "CREATE TABLE `users` (
                   `id` char(40) NOT NULL,
                   `name` varchar(255) NOT NULL,
                   `email` varchar(255) NOT NULL,
                   `image` varchar(255) NOT NULL,
                   PRIMARY KEY (`id`)
-                )",
+                ) CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;",
                 "CREATE TABLE `subscribers` (
                   `user_id` char(40) NOT NULL,
                   `friend_id` char(40) NOT NULL,
                   FOREIGN KEY (`user_id`) REFERENCES `users`(`id`),
                   FOREIGN KEY (`friend_id`) REFERENCES `users`(`id`),
                   PRIMARY KEY (`user_id`, `friend_id`)
-                )",
+                ) CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;",
                 "CREATE TABLE `videos` (
                   `id` char(40) NOT NULL,
                   `user_id` char(40) NOT NULL,
                   `title` varchar(255) NOT NULL,
-                  `description` varchar(2000) NOT NULL,
+                  `description` nvarchar(2000) NOT NULL,
                   `date` DATETIME NOT NULL,
                   FOREIGN KEY (`user_id`) REFERENCES `users`(`id`),
                   PRIMARY KEY (`id`)
-                )",
+                ) CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;",
                 "CREATE TABLE `like_detail` (
                   `video_id` char(40) NOT NULL,
                   `user_id` char(40) NOT NULL,
                   FOREIGN KEY (`video_id`) REFERENCES `videos`(`id`),
                   FOREIGN KEY (`user_id`) REFERENCES `users`(`id`),
                   PRIMARY KEY (`video_id`, `user_id`)
-                )",
+                ) CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;",
                 "CREATE TABLE `dislike_detail` (
                   `video_id` char(40) NOT NULL,
                   `user_id` char(40) NOT NULL,
                   FOREIGN KEY (`video_id`) REFERENCES `videos`(`id`),
                   FOREIGN KEY (`user_id`) REFERENCES `users`(`id`),
                   PRIMARY KEY (`video_id`, `user_id`)
-                )",
+                ) CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;",
                 "CREATE TABLE `view_detail` (
                   `video_id` char(40) NOT NULL,
                   `user_id` char(40) NOT NULL,
                   FOREIGN KEY (`video_id`) REFERENCES `videos`(`id`),
                   FOREIGN KEY (`user_id`) REFERENCES `users`(`id`),
                   PRIMARY KEY (`video_id`, `user_id`)
-                )",
+                ) CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;",
+                "CREATE TABLE `comments` (
+                  `id` char(40) NOT NULL,
+                  `video_id` char(40) NOT NULL,
+                  `user_id` char(40) NOT NULL,
+                  `text` nvarchar(2000) NOT NULL,
+                  `date` DATETIME NOT NULL,
+                  FOREIGN KEY (`video_id`) REFERENCES `videos`(`id`),
+                  FOREIGN KEY (`user_id`) REFERENCES `users`(`id`),
+                  PRIMARY KEY (`id`)
+                ) CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;",
+                "CREATE TABLE `replies` (
+                  `id` char(40) NOT NULL,
+                  `comment_id` char(40) NOT NULL,
+                  `user_id` char(40) NOT NULL,
+                  `text` nvarchar(2000) NOT NULL,
+                  `date` DATETIME NOT NULL,
+                  FOREIGN KEY (`comment_id`) REFERENCES `comments`(`id`),
+                  FOREIGN KEY (`user_id`) REFERENCES `users`(`id`),
+                  PRIMARY KEY (`id`)
+                ) CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;",
             ];
 
             $tableInsertQueries = [
@@ -176,6 +199,8 @@ require_once('util/reportHelper.php');
                 "INSERT INTO `like_detail` (`user_id`, `video_id`) VALUES (?, ?)",
                 "INSERT INTO `dislike_detail` (`user_id`, `video_id`) VALUES (?, ?)",
                 "INSERT INTO `view_detail` (`user_id`, `video_id`) VALUES (?, ?)",
+                "INSERT INTO `comments` (`id`, `video_id`, `user_id`, `text`, `date`) VALUES (?, ?, ?, ?, ?)",
+                "INSERT INTO `replies` (`id`, `comment_id`, `user_id`, `text`, `date`) VALUES (?, ?, ?, ?, ?)",
             ];
 
             foreach ($tableDropQueries as $tableDropQuery)
@@ -240,6 +265,76 @@ require_once('util/reportHelper.php');
                     "big.hit.labels@gmail.com",
                     "https://yt3.ggpht.com/a/AATXAJxBjKTvadXLRjKBIaWrrmKIDTKar0e4eyhj91Bm=s100-c-k-c0xffffffff-no-rj-mo"
                 ],
+                [
+                    "ssss",
+                    "f87ba849-6261-42fa-9fa3-759d4ee1888c",
+                    "LAZER_WAVE",
+                    "lazerwave@gmail.com",
+                    "https://yt3.ggpht.com/a/AATXAJznjH9hDogIEUOVwjJ-HxeIsgiUYLAXlzJLo4Hj=s48-c-k-c0xffffffff-no-rj-mo"
+                ],
+                [
+                    "ssss",
+                    "ddee79c0-32df-4d6e-85fa-f95ad9e91f73",
+                    "Kyurine",
+                    "kyurine@gmail.com",
+                    "https://yt3.ggpht.com/a/AATXAJzTXQLWcqfze4sZF_pFuuOhd3Mb8JFixpwSzXuzLQ=s48-c-k-c0xffffffff-no-rj-mo"
+                ],
+                [
+                    "ssss",
+                    "c036a3a3-7d36-4e61-9d06-55b8032c8a87",
+                    "ARkZX",
+                    "arkzx@gmail.com",
+                    "https://yt3.ggpht.com/a/AATXAJzTXQLWcqfze4sZF_pFuuOhd3Mb8JFixpwSzXuzLQ=s48-c-k-c0xffffffff-no-rj-mo"
+                ],
+                [
+                    "ssss",
+                    "2bc1153c-1572-4c5b-93a7-83e046356e1b",
+                    "Vertus",
+                    "vertus@gmail.com",
+                    "https://yt3.ggpht.com/a/AATXAJzMbZbMxgvMgFaQVKoGBqtrJNbIPOKRPu_s5yfC=s48-c-k-c0xffffffff-no-rj-mo"
+                ],
+                [
+                    "ssss",
+                    "c630dd44-44c9-4bed-8b7f-a12da08b20f9",
+                    "VionZ",
+                    "vionz@gmail.com",
+                    "https://yt3.ggpht.com/a/AATXAJy4b02TBStckQusN8kq-B2FcJ1MIwIAT_-Tn2eT3g=s48-c-k-c0xffffffff-no-rj-mo"
+                ],
+                [
+                    "ssss",
+                    "0b752163-8bb3-44f3-ae0b-4c5ec9fc3848",
+                    "Blitz",
+                    "blitz@gmail.com",
+                    "https://yt3.ggpht.com/a/AATXAJyYfZo0CjmjEkqXviJoBzFilxXQWn6OSQfaSOS1=s48-c-k-c0xffffffff-no-rj-mo"
+                ],
+                [
+                    "ssss",
+                    "e8ff1327-01f8-48bd-8eec-0830c7c73f21",
+                    "XRayz",
+                    "xrayz@gmail.com",
+                    "https://yt3.ggpht.com/a/AATXAJxtrX6bLtrs8Hxo3EpyFEmR91lDt1h3e_n-QcA4=s48-c-k-c0xffffffff-no-rj-mo"
+                ],
+                [
+                    "ssss",
+                    "f1d76360-2bec-409c-a3d0-2aa67a524d9b",
+                    "Haku",
+                    "haku@gmail.com",
+                    "https://yt3.ggpht.com/a/AATXAJyuvnFhKoTEOFNkQr_XtlHth_KlIhJS4MQZYJs_Vg=s48-c-k-c0xffffffff-no-rj-mo"
+                ],
+                [
+                    "ssss",
+                    "1e700574-b08d-43b2-aeaf-d3890e0d2574",
+                    "Gabs",
+                    "gabs@gmail.com",
+                    "https://yt3.ggpht.com/a/AATXAJzigd5pcKDhe_96j99T1yRPY7TgPpOx9i8yCyi3JA=s48-c-k-c0xffffffff-no-rj-mo"
+                ],
+                [
+                    "ssss",
+                    "bbe03db8-1ec6-408e-863d-86f5a0e2336a",
+                    "Finestarix",
+                    "finestarix@gmail.com",
+                    "https://yt3.ggpht.com/a/AATXAJxvM5hv_Y7ntOd3PRoD09aoIGKKHvWkhKpbhuxr=s48-c-k-c0xffffffff-no-rj-mo"
+                ]
             ];
 
             $subscriberSeeder = [
@@ -383,8 +478,8 @@ require_once('util/reportHelper.php');
                     "sssss",
                     "52cd3513-5e13-473c-aa41-7e068d4ba358",
                     "233173a0-bd48-11ea-b3de-0242ac130004",
-                    "Kimetsu No Yai",
-                    "Kimetsu No Yai",
+                    "Kimetsu No Yaiba",
+                    "Kimetsu No Yaiba",
                     "2019-12-29 18:30:00"
                 ],
                 [
@@ -882,6 +977,68 @@ require_once('util/reportHelper.php');
                 ]
             ];
 
+            $commentSeeder = [
+                [
+                    "sssss",
+                    "955a81cb-bccc-407c-95a5-de18d4167c3b",
+                    "5e90df93-9eb6-4a48-8078-4850c302c46a",
+                    "f87ba849-6261-42fa-9fa3-759d4ee1888c",
+                    "Lesson learned: don't go in the nether if you don't have gold",
+                    "2019-12-30 19:20:00"
+                ],
+                [
+                    "sssss",
+                    "60bd0eef-6655-4370-b8d4-8135143c1365",
+                    "5e90df93-9eb6-4a48-8078-4850c302c46a",
+                    "f1d76360-2bec-409c-a3d0-2aa67a524d9b",
+                    "This cinematic trailer makes me want to have Steve in smash bros even more",
+                    "2019-12-30 19:20:00"
+                ],
+                [
+                    "sssss",
+                    "d7912487-53ff-4021-81c8-6498823b9917",
+                    "e486ebef-9938-4a45-a316-a9ccfa7eab82",
+                    "0b752163-8bb3-44f3-ae0b-4c5ec9fc3848",
+                    "S U A R A N Y A B A G U S B A N G E T G I L A !!!",
+                    "2020-06-21 11:00:00"
+                ],
+                [
+                    "sssss",
+                    "f6fba5d8-7dba-4508-8184-2d64c47194fb",
+                    "cefd24b0-5198-4a65-9d20-1faaaffec4d5",
+                    "bbe03db8-1ec6-408e-863d-86f5a0e2336a",
+                    "Lisa's rap is going to be my new life soundtrack, omg",
+                    "2020-06-26 11:00:00"
+                ],
+                [
+                    "sssss",
+                    "feb54c16-56f9-4c7f-a91f-395b6e59d2b1",
+                    "cefd24b0-5198-4a65-9d20-1faaaffec4d5",
+                    "ddee79c0-32df-4d6e-85fa-f95ad9e91f73",
+                    "79M views in 22hrs <br> Jennie to haters: with a smile on my face I'll KISS you goodbye!!",
+                    "2020-06-26 12:00:00"
+                ]
+            ];
+
+            $repliesSeeder = [
+                [
+                    "sssss",
+                    "82974d14-d74e-4132-932a-deb3e00ef4dc",
+                    "f6fba5d8-7dba-4508-8184-2d64c47194fb",
+                    "1e700574-b08d-43b2-aeaf-d3890e0d2574",
+                    "For me too!!!!!",
+                    "2020-06-26 12:02:00"
+                ],
+                [
+                    "sssss",
+                    "c880d0f9-5046-4024-a0ed-cdc35ed9da1c",
+                    "f6fba5d8-7dba-4508-8184-2d64c47194fb",
+                    "e8ff1327-01f8-48bd-8eec-0830c7c73f21",
+                    "Make this the top comment",
+                    "2020-06-26 12:04:00"
+                ]
+            ];
+
             $initializeDatas = [
                 [
                     $tableInsertQueries[0],
@@ -910,6 +1067,14 @@ require_once('util/reportHelper.php');
                 [
                     $tableInsertQueries[6],
                     $viewDetailSeeder
+                ],
+                [
+                    $tableInsertQueries[7],
+                    $commentSeeder
+                ],
+                [
+                    $tableInsertQueries[8],
+                    $repliesSeeder
                 ]
             ];
 
@@ -964,6 +1129,14 @@ require_once('util/reportHelper.php');
 
             echo createReport($reportSeederName, [
                 "View Detail data entered (" . count($viewDetailSeeder) . " data(s))",
+            ]);
+
+            echo createReport($reportSeederName, [
+                "Comments data entered (" . count($commentSeeder) . " data(s))",
+            ]);
+
+            echo createReport($reportSeederName, [
+                "Replies data entered (" . count($repliesSeeder) . " data(s))",
             ]);
 
             $URI = '/';

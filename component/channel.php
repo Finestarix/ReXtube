@@ -3,8 +3,8 @@ require_once('controller/subscriberController.php');
 require_once('controller/videoController.php');
 require_once('controller/viewController.php');
 
-$totalSubscriber = getTotalUserSubscriber($user->userID);
 $userVideos = getVideoByUserID($user->userID);
+$totalSubscriber = getTotalUserSubscriber($user->userID);
 ?>
 
 <div class="bg-light d-flex flex-column align-items-center justify-content-center mt-3">

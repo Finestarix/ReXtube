@@ -22,6 +22,10 @@ class RoutingController {
         include 'trending.php';
     }
 
+    public function watch() {
+        include 'watch.php';
+    }
+
     public function logout() {
         include 'controller/signOutController.php';
     }
