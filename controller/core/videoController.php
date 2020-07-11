@@ -81,6 +81,22 @@ if (!function_exists('getRandomVideo')) {
     }
 }
 
+if (!function_exists('getSearchVideo')) {
+    function getSearchVideo($searchTitle)
+    {
+        $connection = getConnection();
+        $searchTitle = "%" . $searchTitle . "%";
+
+        $query = "SELECT * FROM `videos` WHERE `title` LIKE ? ORDER BY `date` DESC";
+
+        $preparedStatement = $connection->prepare($query);
+        $preparedStatement->bind_param("s", $searchTitle);
+        $preparedStatement->execute();
+
+        return $preparedStatement->get_result();
+    }
+}
+
 if (!function_exists('insertVideo')) {
     function insertVideo($video)
     {

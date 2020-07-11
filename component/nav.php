@@ -32,20 +32,22 @@ if ($currentUser == null) {
 
     <div class="flex-row align-items-center justify-content-center">
 
-        <a class="form-inline position-relative">
+        <div class="form-inline position-relative">
 
             <label>
                 <input style="width: 30em"
-                       class="form-control mr-3"
+                       class="form-control mr-3 glyphicon glyphicon-remove-circle"
                        placeholder="Search"
-                       type="search">
+                       id="search-input"
+                       type="text">
             </label>
 
-            <i style="cursor: pointer; right: 30px"
+            <a style="cursor: pointer; right: 30px"
                class="fa fa-search position-absolute"
-               aria-hidden="true"></i>
+               id="search-button"
+               aria-hidden="true"></a>
 
-        </a>
+        </div>
 
     </div>
 
@@ -150,9 +152,9 @@ if ($currentUser == null) {
         </div>
 
         <a style="cursor:pointer; text-decoration: none;"
-              class="d-inline-flex align-items-center pb-3"
-              id="home"
-              href="/">
+           class="d-inline-flex align-items-center pb-3"
+           id="home"
+           href="/">
 
             <div>
                 <i style="font-size: 1.6em;"
@@ -166,9 +168,9 @@ if ($currentUser == null) {
         </a>
 
         <a style="cursor:pointer; text-decoration: none;"
-              class="d-inline-flex align-items-center pb-3"
-              id="trending"
-              href="trending">
+           class="d-inline-flex align-items-center pb-3"
+           id="trending"
+           href="trending">
 
             <div>
                 <i style="font-size: 1.6em;"
@@ -182,9 +184,9 @@ if ($currentUser == null) {
         </a>
 
         <a style="cursor:pointer; text-decoration: none;"
-              class="d-inline-flex align-items-center pb-3"
-              id="subscription"
-              href="subscription">
+           class="d-inline-flex align-items-center pb-3"
+           id="subscription"
+           href="subscription">
 
             <div>
                 <i style="font-size: 1.6em;"
@@ -263,6 +265,11 @@ if ($currentUser == null) {
             isMenuOpen = !isMenuOpen;
         });
 
+        $("#search-button").click(function (e) {
+            const key = $("#search-input").val();
+            if (key !== "")
+                location.href = "search.php?key=" + key;
+        });
     </script>
 
 </nav>
