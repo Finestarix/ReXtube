@@ -115,7 +115,7 @@ require_once('util/reportHelper.php');
                 "DROP TABLE IF EXISTS `comments`",
                 "DROP TABLE IF EXISTS `subscribers`",
                 "DROP TABLE IF EXISTS `videos`",
-                "DROP TABLE IF EXISTS `users`"
+                "DROP TABLE IF EXISTS `users`",
             ];
 
             $tableCreateQueries = [

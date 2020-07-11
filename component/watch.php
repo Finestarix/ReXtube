@@ -18,10 +18,17 @@ $videoDescription = $video->description;
 $videoDate = date("M j, Y", strtotime($video->date));
 $videoPath = '/video/' . $video->user_id . '/' . $video->id . '/video.mp4';
 
+if (!isUserView($currentUser->id, $video->id))
+    insertView($currentUser->id, $video->id);
 $videoView = getTotalViewByVideoID($video->id);
-$videoLike = getTotalLikeByVideoID($video->id);
-$videoDislike = getTotalDislikeByVideoID($video->id);
+
 $videoSubscriber = getTotalUserSubscriber($videoUser->id);
+
+$videoLike = getTotalLikeByVideoID($video->id);
+$isUserLike = isUserLike($currentUser->id, $video->id);
+
+$videoDislike = getTotalDislikeByVideoID($video->id);
+$isUserDislike = isUserDislike($currentUser->id, $video->id);
 
 $randomVideos = getRandomVideo($video->id);
 ?>
@@ -48,16 +55,21 @@ $randomVideos = getRandomVideo($video->id);
                 <?= $videoView->totalView ?> views - <?= $videoDate ?>
             </div>
 
-            <div style="border-width: 3px !important;"
+            <div id="like-container"
+                 style="border-width: 3px !important;"
                  class="d-flex flex-row border-bottom pb-1">
 
-                <div class="d-flex flex-row ml-3 align-items-center">
-                    <i class="fa fa-thumbs-up mr-2"></i>
+                <div class="d-flex flex-row ml-3 align-items-center"
+                     style="cursor: pointer;">
+                    <i class="fa fa-thumbs-up mr-2"
+                       id="like-button"></i>
                     <div><b><?= $videoLike->totalLike ?></b></div>
                 </div>
 
-                <div class="d-flex flex-row ml-3 align-items-center">
-                    <i class="fa fa-thumbs-down mr-2"></i>
+                <div class="d-flex flex-row ml-3 align-items-center"
+                     style="cursor: pointer;">
+                    <i class="fa fa-thumbs-down mr-2"
+                       id="dislike-button"></i>
                     <div><b><?= $videoDislike->totalDislike ?></b></div>
                 </div>
 
@@ -253,6 +265,14 @@ $randomVideos = getRandomVideo($video->id);
 
 <script>
 
+    <?php if ($isUserLike != NULL) { ?>
+    $("#like-button").attr('style', 'color: #007bff !important');
+    $("#like-container").attr('style', 'border-color: #007bff !important');
+    <?php } else if ($isUserDislike != NULL) { ?>
+    $("#dislike-button").attr('style', 'color: #007bff !important');
+    $("#like-container").attr('style', 'border-color: #007bff !important');
+    <?php } ?>
+
     $("#add-subscription").click(function (e) {
         e.preventDefault();
 
@@ -279,6 +299,42 @@ $randomVideos = getRandomVideo($video->id);
 
         $.ajax({
             url: "/controller/removeSubscriptionController.php",
+            type: "POST",
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function () {
+                location.reload();
+            }
+        });
+    });
+
+    $("#like-button").click(function (e) {
+        e.preventDefault();
+
+        const formData = new FormData();
+        formData.append("video_id", "<?= $video->id ?>");
+
+        $.ajax({
+            url: "/controller/likeVideoController.php",
+            type: "POST",
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function () {
+                location.reload();
+            }
+        });
+    });
+
+    $("#dislike-button").click(function (e) {
+        e.preventDefault();
+
+        const formData = new FormData();
+        formData.append("video_id", "<?= $video->id ?>");
+
+        $.ajax({
+            url: "/controller/dislikeVideoController.php",
             type: "POST",
             data: formData,
             contentType: false,
