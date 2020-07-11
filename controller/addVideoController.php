@@ -2,9 +2,8 @@
 session_start();
 
 require_once(dirname(__FILE__) . '/../util/UUIDHelper.php');
-require_once(dirname(__FILE__) . '/sessionController.php');
-require_once(dirname(__FILE__) . '/../model/Video.php');
-require_once(dirname(__FILE__) . '/videoController.php');
+require_once(dirname(__FILE__) . '/core/sessionController.php');
+require_once(dirname(__FILE__) . '/core/videoController.php');
 
 if(isset($_POST['g-recaptcha-response']))
     $captcha = $_POST['g-recaptcha-response'];
@@ -36,16 +35,18 @@ if (isset($_SESSION['ERROR'])) {
 $UUID = generateUUID();
 $user = getSession();
 
-$directoryFolder = '../video/' . $user->userID . '/' . $UUID . '/';
+$directoryFolder = '../video/' . $user->id . '/' . $UUID . '/';
 
-$video = new Video($UUID, $user->userID, $_POST['title'], trim($_POST['description']), getdate());
-
+$video = new stdClass();
+$video->id = $UUID;
+$video->user_id = $user->id;
+$video->title = $_POST['title'];
+$video->description = $_POST['description'];
+$video->date = getdate();
 insertVideo($video);
 
 mkdir($directoryFolder);
-
 move_uploaded_file($_FILES['video']['tmp_name'], $directoryFolder . 'video.mp4');
 move_uploaded_file($_FILES['thumbnail']['tmp_name'], $directoryFolder . 'image.jpg');
 
-$_SESSION['SUCCESS'] = 'Upload success !';
 header('Location: ../channel.php');

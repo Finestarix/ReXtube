@@ -1,10 +1,10 @@
 <?php
 require_once('controller/signInController.php');
-require_once('controller/sessionController.php');
+require_once('controller/core/sessionController.php');
 
-$user = getSession();
+$currentUser = getSession();
 
-if ($user == null) {
+if ($currentUser == null) {
     $path = getURI()['path'];
     if ($path == 'channel' || $path == 'upload')
         header('Location: ' . $googleClient->createAuthUrl());
@@ -55,7 +55,7 @@ if ($user == null) {
            class="fa fa-video mr-3"
            href="upload"></a>
 
-        <?php if ($user == null) { ?>
+        <?php if ($currentUser == null) { ?>
             <a style="border: 1px solid #007bff; color: #007bff; text-decoration: none;"
                class="d-inline-flex align-items-center p-2"
                href="<?= $googleClient->createAuthUrl() ?>">
@@ -71,12 +71,12 @@ if ($user == null) {
         <?php } else { ?>
             <img style="width: 35px; border-radius: 100%; cursor: pointer"
                  id="profile"
-                 src="<?= $user->userImage ?>"
+                 src="<?= $currentUser->image ?>"
                  alt="Icon">
         <?php } ?>
     </div>
 
-    <?php if ($user != null) { ?>
+    <?php if ($currentUser != null) { ?>
         <div style="position:fixed; display: none !important; right: 55px; top: 0;"
              id="profile-dropdown"
              class="bg-light border p-3 flex-column">
@@ -85,13 +85,13 @@ if ($user == null) {
                             border-bottom p-2">
                 <div>
                     <img style="width: 45px; border-radius: 100%"
-                         src="<?= $user->userImage ?>"
+                         src="<?= $currentUser->image ?>"
                          alt="Icon">
                 </div>
 
                 <div class="flex-column ml-3">
-                    <p class="m-0"><b><?= $user->userName ?></b></p>
-                    <p class="m-0"><?= $user->userEmail ?></p>
+                    <p class="m-0"><b><?= $currentUser->name ?></b></p>
+                    <p class="m-0"><?= $currentUser->email ?></p>
                 </div>
 
             </div>
@@ -199,7 +199,7 @@ if ($user == null) {
 
         <div class="mt-3 mb-4 border-top"></div>
 
-        <?php if ($user == null) { ?>
+        <?php if ($currentUser == null) { ?>
 
             <p>Sign in to like videos, <br>comment, and subscribe.</p>
 
@@ -239,7 +239,7 @@ if ($user == null) {
     </div>
 
     <script>
-        <?php if($user != null) { ?>
+        <?php if($currentUser != null) { ?>
 
         let isProfileOpen = false;
         const profile = document.getElementById('profile');

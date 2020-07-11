@@ -17,7 +17,7 @@
 
 <div class="m-3 bg-light">
 
-    <form action="/controller/uploadController.php"
+    <form action="/controller/addVideoController.php"
           method="post"
           enctype="multipart/form-data">
 

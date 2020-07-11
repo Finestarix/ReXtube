@@ -1,6 +1,6 @@
 <?php
-require_once('controller/videoController.php');
-require_once('controller/viewController.php');
+require_once('controller/core/videoController.php');
+require_once('controller/core/viewController.php');
 
 $userVideos = getHomeVideo();
 ?>
@@ -9,36 +9,36 @@ $userVideos = getHomeVideo();
      class="d-flex flex-row m-3 justify-content-between">
 
     <?php
-    foreach ($userVideos as $userVideo) {
-        $userUpload = getUserByID($userVideo['user_id']);
-        $view = getTotalViewByVideoID($userVideo['id']);
+    while ($userVideo = $userVideos->fetch_object()) {
+        $userUpload = getUserByID($userVideo->user_id);
+        $videoView = getTotalViewByVideoID($userVideo->id);
 
-        $previewImage = '/video/' . $userVideo['user_id'] . '/' . $userVideo['id'] . '/image.jpg';
-        $title = strlen($userVideo['title']) > 17 ?
-            (substr($userVideo['title'], 0, 17) . '...') : $userVideo['title'];
-        $date = date("M j, Y", strtotime($userVideo['date']));
+        $videoTitle = strlen($userVideo->title) > 17 ?
+            (substr($userVideo->title, 0, 17) . '...') : $userVideo->title;
+        $videoPreviewImage = '/video/' . $userVideo->user_id . '/' . $userVideo->id . '/image.jpg';
+        $videoDate = date("M j, Y", strtotime($userVideo->date));
         ?>
 
         <a style="cursor:pointer; text-decoration: none; color: black; width: fit-content"
            class="d-flex flex-column mb-3"
-           href="watch?id=<?= $userVideo['id'] ?>">
+           href="watch?id=<?= $userVideo->id ?>">
 
             <div class="w-auto">
                 <img style="width: 250px"
-                     src="<?= $previewImage ?>"
+                     src="<?= $videoPreviewImage ?>"
                      alt="image">
             </div>
 
             <div class="d-flex flex-row mt-2">
-                <div class="mr-2">
+                <div class="mr-2 ">
                     <img style="width: 40px; border-radius: 100%"
                          src="<?= $userUpload->image ?>"
                          alt="image">
                 </div>
                 <div>
-                    <div class="h5 m-0"><?= $title ?></div>
+                    <div class="h5 m-0"><?= $videoTitle ?></div>
                     <div><?= $userUpload->name ?></div>
-                    <div><?= $view->totalView ?> views - <?= $date ?></div>
+                    <div><?= $videoView->totalView ?> views - <?= $videoDate ?></div>
                 </div>
             </div>
 

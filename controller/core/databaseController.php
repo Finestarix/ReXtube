@@ -3,7 +3,7 @@
 if (!function_exists('getConnection')) {
     function getConnection()
     {
-        $databaseConfig = include(dirname(__FILE__) . '/../config/databaseConfig.php');
+        $databaseConfig = include(dirname(__FILE__) . '/../../config/databaseConfig.php');
 
         $databaseConnection = new mysqli(
             $databaseConfig['HOST'],

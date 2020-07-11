@@ -1,13 +1,13 @@
 <?php
-require_once('controller/sessionController.php');
-require_once('controller/userController.php');
-require_once('controller/videoController.php');
-require_once('controller/viewController.php');
-require_once('controller/likeController.php');
-require_once('controller/dislikeController.php');
-require_once('controller/subscriberController.php');
-require_once('controller/commentController.php');
-require_once('controller/repliesController.php');
+require_once('controller/core/sessionController.php');
+require_once('controller/core/userController.php');
+require_once('controller/core/videoController.php');
+require_once('controller/core/viewController.php');
+require_once('controller/core/likeController.php');
+require_once('controller/core/dislikeController.php');
+require_once('controller/core/subscriberController.php');
+require_once('controller/core/commentController.php');
+require_once('controller/core/repliesController.php');
 
 $video = getVideoByID($_GET['id']);
 $videoUser = getUserByID($video->user_id);
@@ -18,10 +18,10 @@ $videoDescription = $video->description;
 $videoDate = date("M j, Y", strtotime($video->date));
 $videoPath = '/video/' . $video->user_id . '/' . $video->id . '/video.mp4';
 
-$totalView = getTotalViewByVideoID($video->id);
-$totalLike = getTotalLikeByVideoID($video->id);
-$totalDislike = getTotalDislikeByVideoID($video->id);
-$totalSubscriber = getTotalUserSubscriber($videoUser->id);
+$videoView = getTotalViewByVideoID($video->id);
+$videoLike = getTotalLikeByVideoID($video->id);
+$videoDislike = getTotalDislikeByVideoID($video->id);
+$videoSubscriber = getTotalUserSubscriber($videoUser->id);
 
 $randomVideos = getRandomVideo($video->id);
 ?>
@@ -45,7 +45,7 @@ $randomVideos = getRandomVideo($video->id);
         <div class="d-flex justify-content-between border-bottom">
 
             <div class="d-flex flex-row">
-                <?= $totalView->totalView ?> views - <?= $videoDate ?>
+                <?= $videoView->totalView ?> views - <?= $videoDate ?>
             </div>
 
             <div style="border-width: 3px !important;"
@@ -53,12 +53,12 @@ $randomVideos = getRandomVideo($video->id);
 
                 <div class="d-flex flex-row ml-3 align-items-center">
                     <i class="fa fa-thumbs-up mr-2"></i>
-                    <div><b><?= $totalLike->totalLike ?></b></div>
+                    <div><b><?= $videoLike->totalLike ?></b></div>
                 </div>
 
                 <div class="d-flex flex-row ml-3 align-items-center">
                     <i class="fa fa-thumbs-down mr-2"></i>
-                    <div><b><?= $totalDislike->totalDislike ?></b></div>
+                    <div><b><?= $videoDislike->totalDislike ?></b></div>
                 </div>
 
             </div>
@@ -67,33 +67,51 @@ $randomVideos = getRandomVideo($video->id);
         <div class="d-flex flex-row justify-content-between pt-3 pb-3 border-bottom">
 
             <div class="d-flex flex-row">
-                <img style="border-radius: 100%; width: 50px; height: 50px;"
-                     src="<?= $videoUser->image ?>"
-                     alt="userImage">
+                <a href="channel.php?id=<?= $videoUser->id ?>">
+                    <img style="border-radius: 100%; width: 50px; height: 50px;"
+                         src="<?= $videoUser->image ?>"
+                         alt="userImage">
+                </a>
 
                 <div class="ml-3">
                     <div><b><?= $videoUser->name ?></b></div>
-                    <div><?= $totalSubscriber->Total ?> subscribers</div>
-
+                    <div><?= $videoSubscriber->totalSubscriber ?> subscribers</div>
                     <div><?= $videoDescription ?></div>
                 </div>
 
             </div>
 
             <div>
-                <div style="background-color: #ff0000; border-radius: 7%;"
-                     class="text-white p-2">
-                    SUBSCRIBE
-                </div>
+                <?php
+                if ($video->user_id != $currentUser->id) {
+                    $isSubscribe = isSubscribe($currentUser->id, $video->user_id);
+                    if ($isSubscribe->totalSubscriber == 0) {
+                        ?>
+                        <div style="background-color: #ff0000; border-radius: 7%; cursor: pointer;"
+                             class="text-white p-2"
+                             id="add-subscription">
+                            SUBSCRIBE
+                        </div>
+                    <?php } else if ($isSubscribe->totalSubscriber == 1) { ?>
+                        <div style="background-color: #dee2e6; border-radius: 7%; cursor: pointer;"
+                             class="p-2"
+                             id="remove-subscription">
+                            SUBSCRIBED
+                        </div>
+                    <?php } ?>
+                <?php } ?>
+
             </div>
 
         </div>
 
         <div class="mt-3">
             <div class="d-flex flex-row">
-                <img style="border-radius: 100%; width: 50px; height: 50px;"
-                     src="<?= $user->userImage ?>"
-                     alt="userImage">
+                <a href="channel.php?id=<?= $currentUser->id ?>">
+                    <img style="border-radius: 100%; width: 50px; height: 50px;"
+                         src="<?= $currentUser->image ?>"
+                         alt="userImage">
+                </a>
 
                 <div class="ml-3 d-flex align-items-center w-100">
                     <textarea style="outline: none; border: none; border-bottom: #484848 solid 1px; width: inherit; "
@@ -108,37 +126,44 @@ $randomVideos = getRandomVideo($video->id);
         </div>
 
         <div class="mt-5 pt-3 w-100">
-            <?php foreach ($videoComments as $comment) {
-                $commentUser = getUserByID($comment['user_id']);
-                $commentDate = date("M j, Y", strtotime($comment['date']));
+            <?php
+            while ($videoComment = $videoComments->fetch_object()) {
+                $commentUser = getUserByID($videoComment->user_id);
+                $commentReplies = getRepliesByCommentID($videoComment->id);
 
-                $replies = getRepliesByCommentID($comment['id']);
+                $commentDate = date("M j, Y", strtotime($videoComment->date));
                 ?>
 
                 <div class="mt-3 w-100">
                     <div class="d-flex flex-row">
-                        <img style="border-radius: 100%; width: 50px; height: 50px;"
-                             src="<?= $commentUser->image ?>"
-                             alt="userImage">
+                        <a href="channel.php?id=<?= $commentUser->id ?>">
+                            <img style="border-radius: 100%; width: 50px; height: 50px;"
+                                 src="<?= $commentUser->image ?>"
+                                 alt="userImage">
+                        </a>
 
                         <div class="ml-3 w-100">
                             <div><b><?= $commentUser->name ?></b> <?= $commentDate ?></div>
-                            <div><?= $comment['text'] ?></div>
+                            <div><?= $videoComment->text ?></div>
 
-                            <?php foreach ($replies as $reply) {
-                                $replyUser = getUserByID($reply['user_id']);
-                                $replyDate = date("M j, Y", strtotime($reply['date']));
+                            <?php
+                            while ($commentReply = $commentReplies->fetch_object()) {
+                                $replyUser = getUserByID($commentReply->user_id);
+
+                                $replyDate = date("M j, Y", strtotime($commentReply->date));
                                 ?>
 
                                 <div class="mt-3">
                                     <div class="d-flex flex-row">
-                                        <img style="border-radius: 100%; width: 50px; height: 50px;"
-                                             src="<?= $replyUser->image ?>"
-                                             alt="userImage">
+                                        <a href="channel.php?id=<?= $replyUser->id ?>">
+                                            <img style="border-radius: 100%; width: 50px; height: 50px;"
+                                                 src="<?= $replyUser->image ?>"
+                                                 alt="userImage">
+                                        </a>
 
                                         <div class="ml-3">
-                                            <div><b><?= $replyUser->name ?></b> <?= $commentDate ?></div>
-                                            <div><?= $reply['text'] ?></div>
+                                            <div><b><?= $replyUser->name ?></b> <?= $replyDate ?></div>
+                                            <div><?= $commentReply->text ?></div>
                                         </div>
                                     </div>
                                 </div>
@@ -148,10 +173,10 @@ $randomVideos = getRandomVideo($video->id);
                             }
                             ?>
 
-                            <div class="mt-3">
+                            <form class="mt-3">
                                 <div class="d-flex flex-row">
                                     <img style="border-radius: 100%; width: 50px; height: 50px;"
-                                         src="<?= $user->userImage ?>"
+                                         src="<?= $currentUser->image ?>"
                                          alt="userImage">
 
                                     <div class="ml-3 d-flex align-items-center w-100">
@@ -162,11 +187,11 @@ $randomVideos = getRandomVideo($video->id);
                                     </div>
                                 </div>
 
-                                <div style="background-color: #065fd4; float: right; border-radius: 7%;"
-                                     class="text-white p-2 mt-3">
+                                <button style="background-color: #065fd4; float: right; border-radius: 7%;"
+                                        class="btn btn-primary mt-3">
                                     REPLY
-                                </div>
-                            </div>
+                                </button>
+                            </form>
 
                         </div>
                     </div>
@@ -212,3 +237,42 @@ $randomVideos = getRandomVideo($video->id);
     </div>
 </div>
 
+<script>
+
+    $("#add-subscription").click(function (e) {
+        e.preventDefault();
+
+        const formData = new FormData();
+        formData.append("friend_id", "<?= $video->user_id ?>");
+
+        $.ajax({
+            url: "/controller/addSubscriptionController.php",
+            type: "POST",
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function () {
+                location.reload();
+            }
+        });
+    });
+
+    $("#remove-subscription").click(function (e) {
+        e.preventDefault();
+
+        const formData = new FormData();
+        formData.append("friend_id", "<?= $video->user_id ?>");
+
+        $.ajax({
+            url: "/controller/removeSubscriptionController.php",
+            type: "POST",
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function () {
+                location.reload();
+            }
+        });
+    });
+
+</script>

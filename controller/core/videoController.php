@@ -1,5 +1,4 @@
 <?php
-require_once(dirname(__FILE__) . '/../model/Video.php');
 require_once(dirname(__FILE__) . '/databaseController.php');
 
 if (!function_exists('getVideoByUserID')) {
@@ -7,7 +6,7 @@ if (!function_exists('getVideoByUserID')) {
     {
         $connection = getConnection();
 
-        $query = "SELECT * FROM `videos` WHERE `user_id` LIKE ? ORDER BY `date` DESC";
+            $query = "SELECT * FROM `videos` WHERE `user_id` LIKE ? ORDER BY `date` DESC";
 
         $preparedStatement = $connection->prepare($query);
         $preparedStatement->bind_param("s", $userID);
@@ -89,8 +88,8 @@ if (!function_exists('insertVideo')) {
         $query = "INSERT INTO `videos`(`id`, `user_id`, `title`, `description`, `date`) VALUES (?, ?, ?, ?, ?)";
 
         $preparedStatement = $connection->prepare($query);
-        $preparedStatement->bind_param("sssss", $video->videoID, $video->userID, $video->videoTitle,
-            $video->videoDescription, $video->videoDate);
+        $preparedStatement->bind_param("sssss", $video->id, $video->user_id, $video->title,
+            $video->description, $video->date);
         $preparedStatement->execute();
     }
 }

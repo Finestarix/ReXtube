@@ -1,6 +1,6 @@
 <?php
 
-include('controller/routingController.php');
+include('controller/routing/routingController.php');
 include_once('util/uriHelper.php');
 
 $controllerURI = new RoutingController();

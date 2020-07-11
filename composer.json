@@ -16,7 +16,9 @@
         "twbs/bootstrap": "4.0.0",
         "components/font-awesome": "dev-master",
         "ckeditor/ckeditor": "dev-master",
-        "google/recaptcha": "^1.2@dev"
+        "google/recaptcha": "^1.2@dev",
+      "ext-mysqli": "*",
+      "ext-json": "*"
     },
     "autoload": {
         "psr-0": {

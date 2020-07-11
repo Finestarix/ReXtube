@@ -1,5 +1,4 @@
 <?php
-require_once(dirname(__FILE__) . '/../model/User.php');
 require_once(dirname(__FILE__) . '/databaseController.php');
 
 if (!function_exists('getUserByEmail')) {
@@ -39,9 +38,9 @@ if (!function_exists('getUserByID')) {
 if (!function_exists('validateUserDate')) {
     function validateUserData($oldUser, $newUser)
     {
-        return ($oldUser->name == $newUser->userName &&
-            $oldUser->email == $newUser->userEmail &&
-            $oldUser->image == $newUser->userImage);
+        return ($oldUser->name == $newUser->name &&
+            $oldUser->email == $newUser->email &&
+            $oldUser->image == $newUser->image);
     }
 }
 
@@ -54,10 +53,10 @@ if (!function_exists('insertUser')) {
 
         $prepareStatement = $connection->prepare($query);
         $prepareStatement->bind_param("ssss",
-            $user->userID,
-            $user->userName,
-            $user->userEmail,
-            $user->userImage);
+            $user->id,
+            $user->name,
+            $user->email,
+            $user->image);
         $prepareStatement->execute();
     }
 }
@@ -71,9 +70,9 @@ if (!function_exists('updateUser')) {
 
         $prepareStatement = $connection->prepare($query);
         $prepareStatement->bind_param("ssss",
-            $user->userName,
-            $user->userEmail,
-            $user->userImage,
+            $user->name,
+            $user->email,
+            $user->image,
             $userID);
         $prepareStatement->execute();
     }

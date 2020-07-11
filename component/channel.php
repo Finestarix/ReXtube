@@ -1,10 +1,13 @@
 <?php
-require_once('controller/subscriberController.php');
-require_once('controller/videoController.php');
-require_once('controller/viewController.php');
+require_once('controller/core/subscriberController.php');
+require_once('controller/core/videoController.php');
+require_once('controller/core/viewController.php');
 
-$userVideos = getVideoByUserID($user->userID);
-$totalSubscriber = getTotalUserSubscriber($user->userID);
+if (isset($_GET['id']))
+    $currentUser = getUserByID($_GET['id']);
+
+$userVideos = getVideoByUserID($currentUser->id);
+$userSubscriber = getTotalUserSubscriber($currentUser->id);
 ?>
 
 <div class="bg-light d-flex flex-column align-items-center justify-content-center mt-3">
@@ -13,12 +16,12 @@ $totalSubscriber = getTotalUserSubscriber($user->userID);
 
         <img style="border-radius: 100%; width: 100px"
              class="mr-3 ml-5"
-             src="<?= $user->userImage ?>"
+             src="<?= $currentUser->image ?>"
              alt="userImage">
 
         <div>
-            <div class="h3"> <?= $user->userName ?> </div>
-            <div class="h6"> <?= $totalSubscriber->Total ?> subscribers</div>
+            <div class="h3"> <?= $currentUser->name ?> </div>
+            <div class="h6"> <?= $userSubscriber->totalSubscriber ?> subscribers</div>
         </div>
 
     </div>
@@ -26,29 +29,29 @@ $totalSubscriber = getTotalUserSubscriber($user->userID);
     <div class="w-100 mt-3">
 
         <?php
-        foreach ($userVideos as $userVideo) {
-            $view = getTotalViewByVideoID($userVideo['id']);
+        while ($userVideo = $userVideos->fetch_object()) {
+            $videoPreviewImage = '/video/' . $userVideo->user_id . '/' . $userVideo->id . '/image.jpg';
+            $videoDate = date("F j, Y", strtotime($userVideo->date));
+            $videoDescription = strlen($userVideo->description) > 80 ?
+                (substr($userVideo->description, 0, 80) . '...') : $userVideo->description;
 
-            $previewImage = '/video/' . $userVideo['user_id'] . '/' . $userVideo['id'] . '/image.jpg';
-            $date = date("F j, Y", strtotime($userVideo['date']));
-            $description = strlen($userVideo['description']) > 80 ?
-                (substr($userVideo['description'], 0, 80) . '...') : $userVideo['description'];
+            $videoView = getTotalViewByVideoID($userVideo->id);
             ?>
 
             <a style="cursor:pointer; text-decoration: none; color: black"
                class="d-flex flex-row mb-3 ml-5 position-relative"
-               href="watch?id=<?= $userVideo['id'] ?>">
+               href="watch?id=<?= $userVideo->id ?>">
 
                 <div class="mr-3">
                     <img style="width: 250px"
-                         src="<?= $previewImage ?>"
+                         src="<?= $videoPreviewImage ?>"
                          alt="image">
                 </div>
 
                 <div>
-                    <div class="h5"><?= $userVideo['title'] ?></div>
-                    <div><?= $view->totalView ?> views - <?= $date ?></div>
-                    <div><?= $description ?></div>
+                    <div class="h5"><?= $userVideo->title ?></div>
+                    <div><?= $videoView->totalView ?> views - <?= $videoDate ?></div>
+                    <div><?= $videoDescription ?></div>
                 </div>
 
             </a>
