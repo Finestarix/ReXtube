@@ -1,5 +1,7 @@
 <?php
 
+require_once(dirname(__FILE__) . '/databaseController.php');
+
 if (!function_exists('getTotalDislikeByVideoID')) {
     function getTotalDislikeByVideoID($videoID)
     {

@@ -4,7 +4,7 @@ session_start();
 require_once(dirname(__FILE__) . '/core/sessionController.php');
 require_once(dirname(__FILE__) . '/core/subscriberController.php');
 
-$userID = getSession();
+$userID = getSession()->id;
 $friendID = $_POST['friend_id'];
 
-$result = insertSubscriber($userID->id, $friendID);
+$result = insertSubscriber($userID, $friendID);

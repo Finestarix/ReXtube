@@ -105,7 +105,10 @@ $randomVideos = getRandomVideo($video->id);
 
         </div>
 
-        <div class="mt-3">
+        <form class="mt-3"
+              action="/controller/addCommentController.php"
+              method="post">
+
             <div class="d-flex flex-row">
                 <a href="channel.php?id=<?= $currentUser->id ?>">
                     <img style="border-radius: 100%; width: 50px; height: 50px;"
@@ -115,15 +118,19 @@ $randomVideos = getRandomVideo($video->id);
 
                 <div class="ml-3 d-flex align-items-center w-100">
                     <textarea style="outline: none; border: none; border-bottom: #484848 solid 1px; width: inherit; "
+                              name="text"
                               placeholder="Add a public comment..."></textarea>
                 </div>
+
+                <input type="hidden" name="video_id" value="<?= $video->id ?>">
             </div>
 
-            <div style="background-color: #065fd4; float: right; border-radius: 7%;"
-                 class="text-white p-2 mt-3">
+            <button style="background-color: #065fd4; float: right; border-radius: 7%;"
+                    class="btn btn-primary mt-3">
                 POST
-            </div>
-        </div>
+            </button>
+
+        </form>
 
         <div class="mt-5 pt-3 w-100">
             <?php
@@ -173,7 +180,10 @@ $randomVideos = getRandomVideo($video->id);
                             }
                             ?>
 
-                            <form class="mt-3">
+                            <form class="mt-3"
+                                  action="/controller/addReplyController.php"
+                                  method="post">
+
                                 <div class="d-flex flex-row">
                                     <img style="border-radius: 100%; width: 50px; height: 50px;"
                                          src="<?= $currentUser->image ?>"
@@ -183,14 +193,18 @@ $randomVideos = getRandomVideo($video->id);
                                         <textarea
                                                 style="outline: none; border: none;
                                                        border-bottom: #484848 solid 1px; width: 100%;"
+                                                name="text"
                                                 placeholder="Add a public reply..."></textarea>
                                     </div>
+
+                                    <input type="hidden" name="comment_id" value="<?= $videoComment->id ?>">
                                 </div>
 
                                 <button style="background-color: #065fd4; float: right; border-radius: 7%;"
                                         class="btn btn-primary mt-3">
                                     REPLY
                                 </button>
+
                             </form>
 
                         </div>

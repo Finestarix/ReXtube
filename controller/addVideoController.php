@@ -42,7 +42,8 @@ $video->id = $UUID;
 $video->user_id = $user->id;
 $video->title = $_POST['title'];
 $video->description = $_POST['description'];
-$video->date = getdate();
+$datetime = new DateTime();
+$video->date = date_format($datetime, 'Y-m-d H:i:s');
 insertVideo($video);
 
 mkdir($directoryFolder);
