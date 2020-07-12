@@ -199,9 +199,9 @@ if ($currentUser == null) {
 
         </a>
 
-        <div class="mt-3 mb-4 border-top"></div>
-
         <?php if ($currentUser == null) { ?>
+
+            <div class="mt-3 mb-4 border-top"></div>
 
             <p>Sign in to like videos, <br>comment, and subscribe.</p>
 
@@ -217,25 +217,6 @@ if ($currentUser == null) {
                     SIGN IN
                 </div>
             </a>
-        <?php } else { ?>
-
-            <form style="cursor:pointer;"
-                  class="d-inline-flex align-items-center pb-3"
-                  id="history"
-                  action="history"
-                  method="post">
-
-                <div>
-                    <i style="font-size: 1.6em;"
-                       class="fa fa-history"></i>
-                </div>
-
-                <div class="ml-3">
-                    History
-                </div>
-
-            </form>
-
         <?php } ?>
 
     </div>

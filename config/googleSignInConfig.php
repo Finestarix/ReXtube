@@ -5,7 +5,7 @@ require_once(dirname(__FILE__) . '/../vendor/autoload.php');
 $envArr = Dotenv\Dotenv::createImmutable(__DIR__ . '/../', '.env');
 $envArr->load();
 
-$redirectURI = 'http://localhost:8080';
+$redirectURI = 'http://localhost:' . $_SERVER['SERVER_PORT'];
 $googleSignInConfig = require_once('googleSignInConfig.php');
 
 $googleClient = new Google_Client();

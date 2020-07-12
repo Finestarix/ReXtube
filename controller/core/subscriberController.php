@@ -44,7 +44,7 @@ if (!function_exists('insertSubscriber')) {
         $query = "INSERT INTO `subscribers` (`user_id`, `friend_id`) VALUES (?, ?)";
 
         $prepareStatement = $connection->prepare($query);
-        $prepareStatement->bind_param("ss", $userID, $friendID);
+        $prepareStatement->bind_param("ss", $friendID, $userID);
         $prepareStatement->execute();
 
         var_dump($prepareStatement);

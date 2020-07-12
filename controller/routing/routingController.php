@@ -26,6 +26,10 @@ class RoutingController {
         include 'watch.php';
     }
 
+    public function search() {
+        include 'search.php';
+    }
+
     public function logout() {
         include 'controller/signOutController.php';
     }
