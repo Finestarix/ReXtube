@@ -1,13 +1,19 @@
 <?php
-require_once('controller/signInController.php');
-require_once('controller/core/sessionController.php');
+
+require_once(dirname(__FILE__) . '/../controller/signInController.php');
+require_once(dirname(__FILE__) . '/../controller/core/sessionController.php');
+require_once(dirname(__FILE__) . '/../util/uriHelper.php');
+
+checkURI(realpath(__FILE__));
 
 $currentUser = getSession();
 
+$path = getURI()['path'];
 if ($currentUser == null) {
-    $path = getURI()['path'];
-    if ($path == 'channel' || $path == 'upload')
+    if ($path == 'channel' || $path == 'upload' || $path == 'history')
         header('Location: ' . $googleClient->createAuthUrl());
+} else if ($path == 'watch' && !isset($_GET['id'])) {
+    header('Location:  /');
 }
 ?>
 
@@ -62,11 +68,11 @@ if ($currentUser == null) {
                class="d-inline-flex align-items-center p-2"
                href="<?= $googleClient->createAuthUrl() ?>">
 
-                <i style="font-size: 1.2em"
+                <i style="font-size: 1.2em; color: #007bff;"
                    class="fa fa-user mr-3"
                    aria-hidden="true"></i>
 
-                <div style="font-size: 16px">
+                <div style="font-size: 16px; color: #007bff">
                     SIGN IN
                 </div>
             </a>
@@ -183,25 +189,9 @@ if ($currentUser == null) {
 
         </a>
 
-        <a style="cursor:pointer; text-decoration: none;"
-           class="d-inline-flex align-items-center pb-3"
-           id="subscription"
-           href="subscription">
-
-            <div>
-                <i style="font-size: 1.6em;"
-                   class="fa fa-plus"></i>
-            </div>
-
-            <div class="ml-3">
-                Subscription
-            </div>
-
-        </a>
+        <div class="mt-3 mb-4 border-top"></div>
 
         <?php if ($currentUser == null) { ?>
-
-            <div class="mt-3 mb-4 border-top"></div>
 
             <p>Sign in to like videos, <br>comment, and subscribe.</p>
 
@@ -209,14 +199,32 @@ if ($currentUser == null) {
                class="d-inline-flex align-items-center p-2"
                href="<?= $googleClient->createAuthUrl() ?>">
 
-                <i style="font-size: 1.2em"
+                <i style="font-size: 1.2em; color: #007bff;"
                    class="fa fa-user mr-3"
                    aria-hidden="true"></i>
 
-                <div style="font-size: 16px">
+                <div style="font-size: 16px; color: #007bff">
                     SIGN IN
                 </div>
             </a>
+        <?php } else { ?>
+
+            <a style="cursor:pointer; text-decoration: none;"
+               class="d-inline-flex align-items-center pb-3"
+               id="history"
+               href="history">
+
+                <div>
+                    <i style="font-size: 1.6em;"
+                       class="fa fa-history"></i>
+                </div>
+
+                <div class="ml-3">
+                    History
+                </div>
+
+            </a>
+
         <?php } ?>
 
     </div>

@@ -1,6 +1,9 @@
 <?php
 
 require_once(dirname(__FILE__) . '/databaseController.php');
+require_once(dirname(__FILE__) . '/../../util/uriHelper.php');
+
+checkURI(realpath(__FILE__));
 
 if (!function_exists('getTotalUserSubscriber')) {
     function getTotalUserSubscriber($userID)
@@ -27,7 +30,7 @@ if (!function_exists('isSubscribe')) {
         $query = "SELECT COUNT(*) AS totalSubscriber FROM `subscribers` WHERE `user_id` LIKE ? AND `friend_id` LIKE ?";
 
         $preparedStatement = $connection->prepare($query);
-        $preparedStatement->bind_param("ss", $userID, $friendID);
+        $preparedStatement->bind_param("ss", $friendID, $userID);
         $preparedStatement->execute();
 
         $result = $preparedStatement->get_result();
@@ -61,7 +64,7 @@ if (!function_exists('removeSubscriber')) {
         $query = "DELETE FROM `subscribers` WHERE `user_id` LIKE ? AND `friend_id` LIKE ?";
 
         $prepareStatement = $connection->prepare($query);
-        $prepareStatement->bind_param("ss", $userID, $friendID);
+        $prepareStatement->bind_param("ss", $friendID, $userID);
         $prepareStatement->execute();
 
         var_dump($prepareStatement);

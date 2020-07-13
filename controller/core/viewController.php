@@ -1,6 +1,9 @@
 <?php
 
 require_once(dirname(__FILE__) . '/databaseController.php');
+require_once(dirname(__FILE__) . '/../../util/uriHelper.php');
+
+checkURI(realpath(__FILE__));
 
 if (!function_exists('getTotalViewByVideoID')) {
     function getTotalViewByVideoID($videoID)
@@ -18,6 +21,7 @@ if (!function_exists('getTotalViewByVideoID')) {
         return $result->fetch_object();
     }
 }
+
 if (!function_exists('isUserView')) {
     function isUserView($userID, $videoID)
     {

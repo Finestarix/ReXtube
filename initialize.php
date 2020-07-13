@@ -104,7 +104,7 @@ require_once('util/reportHelper.php');
                 "@" . $databaseConfig['HOST'] . " with username " . $databaseConfig['USERNAME'];
             echo createReport($reportSQLConnectName, $errorMessage);
 
-            $tableName = "9 tables (app_config, users, subscriber, videos, like_detail, dislike_detail, view_detail, replies, comments)";
+            $tableName = "10 tables (app_config, users, subscriber, videos, like_detail, dislike_detail, view_detail, replies, comments, histories)";
 
             $tableDropQueries = [
                 "DROP TABLE IF EXISTS `app_config`",
@@ -113,6 +113,7 @@ require_once('util/reportHelper.php');
                 "DROP TABLE IF EXISTS `view_detail`",
                 "DROP TABLE IF EXISTS `replies`",
                 "DROP TABLE IF EXISTS `comments`",
+                "DROP TABLE IF EXISTS `histories`",
                 "DROP TABLE IF EXISTS `subscribers`",
                 "DROP TABLE IF EXISTS `videos`",
                 "DROP TABLE IF EXISTS `users`",
@@ -189,6 +190,15 @@ require_once('util/reportHelper.php');
                   FOREIGN KEY (`user_id`) REFERENCES `users`(`id`),
                   PRIMARY KEY (`id`)
                 ) CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;",
+                "CREATE TABLE `histories` (
+                  `id` char(40) NOT NULL,
+                  `video_id` char(40) NOT NULL,
+                  `user_id` char(40) NOT NULL,
+                  `date` DATETIME NOT NULL,
+                  FOREIGN KEY (`video_id`) REFERENCES `videos`(`id`),
+                  FOREIGN KEY (`user_id`) REFERENCES `users`(`id`),
+                  PRIMARY KEY (`id`)
+                ) CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;",
             ];
 
             $tableInsertQueries = [
@@ -201,6 +211,7 @@ require_once('util/reportHelper.php');
                 "INSERT INTO `view_detail` (`user_id`, `video_id`) VALUES (?, ?)",
                 "INSERT INTO `comments` (`id`, `video_id`, `user_id`, `text`, `date`) VALUES (?, ?, ?, ?, ?)",
                 "INSERT INTO `replies` (`id`, `comment_id`, `user_id`, `text`, `date`) VALUES (?, ?, ?, ?, ?)",
+                "INSERT INTO `histories` (`id`, `video_id`, `user_id`, `date`) VALUES (?, ?, ?, ?)",
             ];
 
             foreach ($tableDropQueries as $tableDropQuery)
@@ -1039,6 +1050,8 @@ require_once('util/reportHelper.php');
                 ]
             ];
 
+            $historiesSeeder = [];
+
             $initializeDatas = [
                 [
                     $tableInsertQueries[0],
@@ -1075,6 +1088,10 @@ require_once('util/reportHelper.php');
                 [
                     $tableInsertQueries[8],
                     $repliesSeeder
+                ],
+                [
+                    $tableInsertQueries[9],
+                    $historiesSeeder
                 ]
             ];
 
@@ -1137,6 +1154,10 @@ require_once('util/reportHelper.php');
 
             echo createReport($reportSeederName, [
                 "Replies data entered (" . count($repliesSeeder) . " data(s))",
+            ]);
+
+            echo createReport($reportSeederName, [
+                "Histories data entered (" . count($historiesSeeder) . " data(s))",
             ]);
 
             $URI = '/';

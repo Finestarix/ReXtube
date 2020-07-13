@@ -2,6 +2,7 @@
   <dictionary name="Finestarix">
     <words>
       <w>ckeditor</w>
+      <w>csrf</w>
       <w>navbar</w>
       <w>signout</w>
       <w>toggler</w>

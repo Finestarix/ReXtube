@@ -1,6 +1,9 @@
 <?php
 
 require_once(dirname(__FILE__) . '/../vendor/autoload.php');
+require_once(dirname(__FILE__) . '/../util/uriHelper.php');
+
+checkURI(realpath(__FILE__));
 
 $envArr = Dotenv\Dotenv::createImmutable(__DIR__ . '/../', '.env');
 $envArr->load();

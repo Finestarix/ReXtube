@@ -4,7 +4,14 @@
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
 
-    RewriteRule ^(.*)$ router.php [L]
+    RewriteRule ^ router.php [L]
 </IfModule>
 
+<Files ~ (.env|composer.json|composer.lock|README.md)>
+    Order allow,deny
+    Deny from all
+</Files>
+
 Options -Indexes
+
+ErrorDocument 403 /

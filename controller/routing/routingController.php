@@ -1,5 +1,9 @@
 <?php
 
+require_once(dirname(__FILE__) . '/../../util/uriHelper.php');
+
+checkURI(realpath(__FILE__));
+
 class RoutingController {
 
     public function index() {
@@ -28,6 +32,10 @@ class RoutingController {
 
     public function search() {
         include 'search.php';
+    }
+
+    public function history() {
+        include 'history.php';
     }
 
     public function logout() {

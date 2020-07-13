@@ -1,6 +1,10 @@
 <?php
+
 require_once('controller/core/videoController.php');
 require_once('controller/core/viewController.php');
+require_once(dirname(__FILE__) . '/../util/uriHelper.php');
+
+checkURI(realpath(__FILE__));
 
 $userVideos = getHomeVideo();
 ?>
@@ -15,6 +19,9 @@ $userVideos = getHomeVideo();
 
         $videoTitle = strlen($userVideo->title) > 17 ?
             (substr($userVideo->title, 0, 17) . '...') : $userVideo->title;
+        $videoTitle = preg_replace('#&lt;(/?(?:pre|b|em|u|ul|li|ol|strong|s|p|br))&gt;#', '<\1>',
+            htmlspecialchars($videoTitle, ENT_QUOTES));
+
         $videoPreviewImage = '/video/' . $userVideo->user_id . '/' . $userVideo->id . '/image.jpg';
         $videoDate = date("M j, Y", strtotime($userVideo->date));
         ?>

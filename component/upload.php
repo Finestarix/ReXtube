@@ -1,3 +1,13 @@
+<?php
+
+require_once(dirname(__FILE__) . '/../util/uriHelper.php');
+require_once(dirname(__FILE__) . '/../controller/core/CSRFController.php');
+
+checkURI(realpath(__FILE__));
+
+regenerateToken();
+?>
+
 <script src="https://www.google.com/recaptcha/api.js"></script>
 
 <style>
@@ -85,6 +95,10 @@
         <div class="g-recaptcha mb-3"
              data-sitekey="6LfVuK0ZAAAAAMR_hfGzDtacqZYk99XpDv2M0WM_">
         </div>
+
+        <input type="hidden"
+               name="CSRF_TOKEN"
+               value="<?= getToken() ?>">
 
         <button type="submit"
                 class="btn btn-secondary w-100">

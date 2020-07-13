@@ -1,9 +1,12 @@
 <?php
 
-require_once(dirname(__FILE__) . '/../util/UUIDHelper.php');
+require_once(dirname(__FILE__) . '/../util/generatorHelper.php');
 require_once(dirname(__FILE__) . '/../config/googleSignInConfig.php');
 require_once(dirname(__FILE__) . '/core/userController.php');
 require_once(dirname(__FILE__) . '/core/sessionController.php');
+require_once(dirname(__FILE__) . '/../util/uriHelper.php');
+
+checkURI(realpath(__FILE__));
 
 if (!isset($_GET["code"]))
     return;

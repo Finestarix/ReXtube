@@ -1,13 +1,20 @@
 <?php
-session_start();
 
-require_once(dirname(__FILE__) . '/../util/UUIDHelper.php');
 require_once(dirname(__FILE__) . '/core/sessionController.php');
 require_once(dirname(__FILE__) . '/core/videoController.php');
+require_once(dirname(__FILE__) . '/../util/generatorHelper.php');
+require_once(dirname(__FILE__) . '/../util/uriHelper.php');
+require_once(dirname(__FILE__) . '/core/CSRFController.php');
+
+checkURI(realpath(__FILE__));
+
+session_start();
 
 if(isset($_POST['g-recaptcha-response']))
     $captcha = $_POST['g-recaptcha-response'];
 
+if (checkToken($_POST['CSRF_TOKEN']))
+    $_SESSION['ERROR'] = 'Invalid CSRF Token !';
 if (!$captcha)
     $_SESSION['ERROR'] = 'You are robot !';
 else if (empty($_POST['title']))

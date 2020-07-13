@@ -1,9 +1,17 @@
 <?php
-session_start();
 
 require_once(dirname(__FILE__) . '/core/sessionController.php');
 require_once(dirname(__FILE__) . '/core/commentController.php');
-require_once(dirname(__FILE__) . '/../util/UUIDHelper.php');
+require_once(dirname(__FILE__) . '/core/CSRFController.php');
+require_once(dirname(__FILE__) . '/../util/generatorHelper.php');
+require_once(dirname(__FILE__) . '/../util/uriHelper.php');
+
+checkURI(realpath(__FILE__));
+
+session_start();
+
+if (checkToken($_POST['CSRF_TOKEN']))
+    header('Location: ' . $_SERVER['HTTP_REFERER']);
 
 $commentID = generateUUID();
 $userID = getSession()->id;

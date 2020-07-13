@@ -1,7 +1,12 @@
 <?php
+
+require_once(dirname(__FILE__) . '/../util/uriHelper.php');
+
+checkURI(realpath(__FILE__));
+
 session_start();
 
-require_once('util/uriHelper.php');
+//ini_set('error_reporting', '0');
 ?>
 
 <head>
