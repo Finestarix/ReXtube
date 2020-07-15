@@ -11,7 +11,16 @@ checkURI(realpath(__FILE__));
 session_start();
 
 if (checkToken($_POST['CSRF_TOKEN']))
+    $_SESSION['ERROR'] = 'Invalid CSRF Token !';
+else if (!isset($_POST['text']) || !isset($_POST['video_id']) || empty($_POST['video_id']))
+    $_SESSION['ERROR'] = 'Invalid Comment Request !';
+else if (empty($_POST['text']))
+    $_SESSION['ERROR'] = 'Comment can\'t be empty !';
+
+if (isset($_SESSION['ERROR'])) {
     header('Location: ' . $_SERVER['HTTP_REFERER']);
+    die();
+}
 
 $commentID = generateUUID();
 $userID = getSession()->id;

@@ -57,6 +57,33 @@ if (getSession() != NULL) {
 
 ?>
 
+<?php
+if (isset($_SESSION['ERROR'])) {
+    ?>
+    <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-danger">Error Message</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <?= $_SESSION['ERROR'] ?>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php
+    unset($_SESSION['ERROR']);
+}
+?>
+
 <div style="background-color: black"
      class="d-flex justify-content-center w-100">
     <video style="outline: none"
@@ -79,19 +106,21 @@ if (getSession() != NULL) {
                 <?= $videoView->totalView ?> views - <?= $videoDate ?>
             </div>
 
-            <div id="like-container"
+            <div id="like-top-container"
                  style="border-width: 3px !important;"
                  class="d-flex flex-row border-bottom pb-1">
 
                 <div class="d-flex flex-row ml-3 align-items-center"
-                     style="cursor: pointer;">
+                     style="cursor: pointer;"
+                     id="like-container">
                     <i class="fa fa-thumbs-up mr-2"
                        id="like-button"></i>
                     <div><b><?= $videoLike->totalLike ?></b></div>
                 </div>
 
                 <div class="d-flex flex-row ml-3 align-items-center"
-                     style="cursor: pointer;">
+                     style="cursor: pointer;"
+                     id="dislike-container">
                     <i class="fa fa-thumbs-down mr-2"
                        id="dislike-button"></i>
                     <div><b><?= $videoDislike->totalDislike ?></b></div>
@@ -315,12 +344,19 @@ if (getSession() != NULL) {
 
 <script>
 
+    const modalContainer = $('#errorModal');
+    if (modalContainer) {
+        $(window).on('load', function () {
+            modalContainer.modal('show');
+        });
+    }
+
     <?php if ($isUserLike != NULL) { ?>
     $("#like-button").attr('style', 'color: #007bff !important');
-    $("#like-container").attr('style', 'border-color: #007bff !important');
+    $("#like-top-container").attr('style', 'border-color: #007bff !important');
     <?php } else if ($isUserDislike != NULL) { ?>
     $("#dislike-button").attr('style', 'color: #007bff !important');
-    $("#like-container").attr('style', 'border-color: #007bff !important');
+    $("#like-top-container").attr('style', 'border-color: #007bff !important');
     <?php } ?>
 
     $("#add-subscription").click(function (e) {
@@ -361,7 +397,7 @@ if (getSession() != NULL) {
         });
     });
 
-    $("#like-button").click(function (e) {
+    $("#like-container").click(function (e) {
         e.preventDefault();
 
         const formData = new FormData();
@@ -380,7 +416,7 @@ if (getSession() != NULL) {
         });
     });
 
-    $("#dislike-button").click(function (e) {
+    $("#dislike-container").click(function (e) {
         e.preventDefault();
 
         const formData = new FormData();
