@@ -8,9 +8,9 @@ require_once('util/reportHelper.php');
 <head>
     <?php include('component/header.php') ?>
 </head>
-<body class="bg-dark">
+<body class="bg-light">
 <div class="container-fluid mt-3 mb-3">
-    <header class="jumbotron text-center">
+    <header class="text-center mb-3">
         <h1 class="title">ReXtube Initialization Script</h1>
     </header>
     <article>

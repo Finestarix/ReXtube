@@ -39,7 +39,7 @@ if (!function_exists('getUserByID')) {
     }
 }
 
-if (!function_exists('validateUserDate')) {
+if (!function_exists('validateUserData')) {
     function validateUserData($oldUser, $newUser)
     {
         return ($oldUser->name == $newUser->name &&

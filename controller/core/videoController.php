@@ -25,7 +25,7 @@ if (!function_exists('getVideoByID')) {
     {
         $connection = getConnection();
 
-        $query = "SELECT * FROM `videos` WHERE `id` LIKE ? ORDER BY `date` DESC";
+        $query = "SELECT * FROM `videos` WHERE `id` LIKE ?";
 
         $preparedStatement = $connection->prepare($query);
         $preparedStatement->bind_param("s", $videoID);

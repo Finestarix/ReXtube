@@ -1,6 +1,7 @@
 <?php
 
 require_once(dirname(__FILE__) . '/../controller/signInController.php');
+require_once(dirname(__FILE__) . '/../controller/core/videoController.php');
 require_once(dirname(__FILE__) . '/../controller/core/sessionController.php');
 require_once(dirname(__FILE__) . '/../util/uriHelper.php');
 
@@ -13,6 +14,8 @@ if ($currentUser == null) {
     if ($path == 'channel' || $path == 'upload' || $path == 'history')
         header('Location: ' . $googleClient->createAuthUrl());
 } else if ($path == 'watch' && !isset($_GET['id'])) {
+    header('Location:  /');
+} else if ($path == 'watch' && getVideoByID($_GET['id']) == null) {
     header('Location:  /');
 }
 ?>
